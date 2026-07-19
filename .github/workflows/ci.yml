@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      # build runs tsc --noEmit, vite build, and the em/en-dash gate (scripts/check-dashes.mjs).
+      # No browser and no API key needed — the real-browser verify:* harnesses are not part of CI.
+      - run: npm run build

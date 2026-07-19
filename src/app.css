@@ -1,0 +1,163 @@
+/* The page background + base text tone are owned by public/landing.css (the static
+   landing document, painted pre-mount): `:root body { background: var(--byo-page) }`
+   with static tokens that mirror this theme (light #f4f4f5, dark-7 #141418), so there
+   is no landing↔workbench seam and no flash before MantineProvider injects its vars. */
+
+/* Filled-primary TEXT color, per scheme (consumed by theme.ts variantColorResolver). Light: the
+   accent is dark teal (shade 7, #0f766e) → white text (~5.8:1). Dark: the accent is LIGHT teal
+   (shade 4, #2dd4bf) → dark text (#18181b, ~8:1); white here would fail WCAG AA (~1.86:1). Covers
+   the history-count bubble, Primary badge, Generate, and Set-as-Primary. */
+:root {
+  --nb-primary-contrast: var(--mantine-color-white);
+  /* P15: same pattern for filled DANGER controls (modal "Clear history" confirm, red
+     notifications): white on the deep light-mode red-7 (#b91c1c, 6.5:1), black on the
+     bright dark-mode red-4 (#f87171, 6.4:1 — white there would be 2.8:1). */
+  --nb-danger-contrast: var(--mantine-color-white);
+}
+:root[data-mantine-color-scheme="dark"] {
+  --nb-primary-contrast: var(--mantine-color-black);
+  --nb-danger-contrast: var(--mantine-color-black);
+}
+
+/* P15: light-variant danger text in LIGHT mode. Mantine derives it as red-9 (#7f1d1d), a
+   muddy maroon on the red-100 fill; red-7 (#b91c1c, 5.5:1 on that fill) reads decisively
+   red. Doubled :root outranks Mantine's runtime :root variable block (document order);
+   the dark block below (higher specificity) still wins in dark. */
+:root:root {
+  --mantine-color-red-light-color: var(--mantine-color-red-7);
+}
+
+/* ---- P14: dark-mode accent legibility (Mantine convention: dark wants LIGHTER,
+   brighter accent shades — the defaults derive light-variant surfaces from shade 9,
+   which lands muddy/dim on our zinc surfaces). Token-level, dark scope only, so every
+   light-variant Badge/Alert inherits at once:
+   - workbench (key-status pill, N-references chip, validated alert): translucent teal
+     wash + light teal text (workbench-3 #5eead4, ~8.6:1 on the wash over Paper).
+   - gray (settings + run-summary chips, popover badges): a genuinely LIGHTER fill than
+     the Paper they sit on (dark-5 vs dark-6) instead of a near-black hole.
+   - yellow (charges note, second-tab banner): translucent amber wash + amber-100 text
+     (~11:1) instead of darkened-brown. */
+/* Doubled :root for specificity: MantineProvider injects its own equal-specificity
+   :root[data-mantine-color-scheme="dark"] variable block in a runtime <style> that
+   follows this stylesheet in document order — these overrides must outrank it. */
+:root:root[data-mantine-color-scheme="dark"] {
+  --mantine-color-gray-light: var(--mantine-color-dark-5);
+  /* Hover stays a SURFACE tone, one step up, not the dark-4 line token: this variable
+     also drives every gray subtle-variant hover (reference-reorder arrows, "Clear key"),
+     which must hover quiet, not light up like a border. */
+  --mantine-color-gray-light-hover: var(--mantine-color-dark-5);
+  --mantine-color-workbench-light: rgba(45, 212, 191, 0.12);
+  --mantine-color-workbench-light-hover: rgba(45, 212, 191, 0.18);
+  --mantine-color-workbench-light-color: var(--mantine-color-workbench-3);
+  --mantine-color-yellow-light: rgba(250, 204, 21, 0.1);
+  --mantine-color-yellow-light-hover: rgba(250, 204, 21, 0.14);
+  --mantine-color-yellow-light-color: var(--mantine-color-yellow-2);
+  /* P15: danger red, same treatment ("Clear history", "Cancel remaining", failure Alerts):
+     translucent red-4 wash + red-3 text (#fca5a5, 7.3:1 on the wash over Paper) instead of
+     Mantine's muted brick. Filled danger needs no override — primaryShade {dark:4} already
+     derives the bright red-4 #f87171 (6.0:1 against Paper; its dark TEXT comes from
+     variantColorResolver + --nb-danger-contrast in theme.ts) — but Mantine pins the ERROR
+     token to shade 8 in dark (#991b1b brick), so lift it to the same red-4. */
+  --mantine-color-red-light: rgba(248, 113, 113, 0.12);
+  --mantine-color-red-light-hover: rgba(248, 113, 113, 0.18);
+  --mantine-color-red-light-color: var(--mantine-color-red-3);
+  --mantine-color-error: var(--mantine-color-red-4);
+}
+
+/* Light-variant Badges/Alerts in dark also get a border derived from their own text
+   color (teal badge → teal border, gray → gray, amber → amber, red → red): the wash alone
+   is too quiet for at-a-glance surface separation. 50% lands ≥3:1 against the page/Paper
+   for every accent in play (P14 set 45% when teal was the floor at 3.3:1; P15's red-3
+   sat at 2.85:1 there — 50% gives red 3.2:1, teal 3.8:1). Both components already reserve
+   a 1px transparent border, so this never shifts layout. */
+:root[data-mantine-color-scheme="dark"] .mantine-Badge-root[data-variant="light"] {
+  border-color: color-mix(in srgb, var(--badge-color) 50%, transparent);
+}
+:root[data-mantine-color-scheme="dark"] .mantine-Alert-root[data-variant="light"] {
+  border-color: color-mix(in srgb, var(--alert-color) 50%, transparent);
+}
+
+/* ---- P14: checked controls sit on the LIGHT dark-mode accent (#2dd4bf) — their
+   glyph/thumb must be dark, the same autoContrast gap P7 fixed for filled buttons.
+   White-on-teal is ~1.86:1; the dark thumb/glyph is ~9.6:1. The Switch keeps Mantine's
+   thumb-indicator dot (track color through the thumb), which now reads as a visible
+   teal-on-dark donut. Unchecked states are untouched. */
+:root[data-mantine-color-scheme="dark"] .mantine-Switch-input:checked + .mantine-Switch-track {
+  /* Mantine's own thumb variable (not a direct thumb background), so the disabled-thumb
+     treatment still wins when applicable. */
+  --switch-thumb-bg: var(--nb-primary-contrast);
+}
+:root[data-mantine-color-scheme="dark"] .mantine-Checkbox-root {
+  --checkbox-icon-color: var(--nb-primary-contrast);
+}
+
+/* ---- SW-1: the LIGHT-mode unchecked Switch. Mantine's off track is gray-3 on a white Paper
+   (1.48:1) and its thumb is white on that same gray-3 (1.48:1), so both the control's boundary
+   and its on/off position cue fall below WCAG 1.4.11's 3:1. Same answer as the SegmentedControl
+   below: keep the neutral fills the design wants and put the missing contrast on a 1px gray-5
+   ring (this repo's "a line that must clear 3:1" pair) — 4.83:1 against the white Paper and
+   against the white thumb, 3.27:1 against the gray-3 track.
+   LIGHT only: dark's off track already reads through its white thumb at 14.65:1, so a ring there
+   is unnecessary, and a dark-3 ring would be only 2.56:1 against the white thumb it outlined
+   while muddying the one cue that already works. ENABLED and UNCHECKED only: the checked track is
+   the teal accent (5.47:1 on Paper, on/off delta 3.70:1) and needs no ring, and a disabled
+   control is WCAG-exempt — a ring there would make it look enabled.
+   Outset box-shadow, not a border: layout and hit geometry are unchanged, so the 14px thumb keeps
+   its whole face and the ring clears the track's own `overflow: hidden` (8.5px from the cap
+   centre vs the track's 10px radius). It also sits inside the focus outline's 2px offset. */
+:root[data-mantine-color-scheme="light"] .mantine-Switch-input:enabled:not(:checked) + .mantine-Switch-track,
+:root[data-mantine-color-scheme="light"]
+  .mantine-Switch-input:enabled:not(:checked)
+  + .mantine-Switch-track
+  .mantine-Switch-thumb {
+  box-shadow: 0 0 0 1px var(--mantine-color-gray-5);
+}
+
+/* ---- SegmentedControl selected-state contrast. Mantine's neutral pill barely differs from its
+   own track — white on gray-1 is 1.10:1 in light, dark-5 on dark-8 is 1.33:1 in dark — so the
+   selected state falls far under WCAG 1.4.11's 3:1 for a state indicator. The design wants a
+   NEUTRAL pill, not a teal fill, so the state rides a 1px ring instead of a new fill.
+   light-dark(gray-5, dark-3) is this repo's "a line that must clear 3:1" pair (see the
+   scrollbar-thumb note in SessionView.module.css): 4.83:1 / 5.72:1 against the pill, 4.40:1 /
+   7.62:1 against the track.
+
+   TWO selectors: Mantine paints the pill twice — `.indicator` once the control has measured
+   itself, and `.label[data-active]::before` on the pre-measure first paint.
+
+   The COMPONENT ROOT carries the specificity, NOT the doubled `:root` used elsewhere in this
+   file: postcss-preset-mantine compiles light-dark()'s dark arm by PREFIXING the selector with
+   `[data-mantine-color-scheme="dark"] `, and `:root` can never be a descendant of itself, so
+   `:root:root` + light-dark() silently dies in dark. Winning the cascade is mandatory here —
+   Mantine's dark sheet hard-sets `box-shadow: none` on both paint targets, so no `--sc-shadow`
+   or theme-variable route can reach dark at all.
+
+   `var(--sc-shadow, 0 0 transparent)` keeps Mantine's own shadow decision (preserves the light
+   lift, drops out on a `color=` SegmentedControl). The fallback cannot be `none` — `<ring>, none`
+   is an invalid box-shadow list. box-shadow, not border: paint-level only, so the JS-measured
+   indicator keeps its exact dimensions and the ring stays inside the root's 4px padding. */
+.mantine-SegmentedControl-root .mantine-SegmentedControl-indicator,
+.mantine-SegmentedControl-root .mantine-SegmentedControl-label[data-active]::before {
+  box-shadow:
+    0 0 0 1px light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3)),
+    var(--sc-shadow, 0 0 transparent);
+}
+
+/* ---- P14: slim scrollbar for native textareas (the subject prompt grows past rows=4
+   and scrolled with a fat default bar — same P11 treatment as the inspector/prompt). */
+textarea {
+  scrollbar-width: thin;
+  scrollbar-color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3)) transparent;
+}
+
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3));
+  border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: transparent;
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "tenebrist-oil-realism",
+  "version": 2,
+  "name": "Tenebrist oil realism",
+  "description": "Dramatic oil painting: the subject emerges from deep shadow under focused light.",
+  "kind": "artwork",
+  "comparable": true,
+  "promptTemplate": "This is your subject:\n{{subject}}\n\nDraw the subject in this style:\nRender the subject as a dramatic tenebrist oil painting with a deep, low-key atmosphere and concentrated illumination. Stage the composition so that selected forms emerge vividly from broad areas of shadow, using light to direct attention and reveal volume, texture, and gesture.\n\nModel the subject with smooth tonal transitions, translucent glazing, subtle scumbling, and carefully controlled edges. Use crisp detail around the focal point, softer transitions in secondary areas, and lost edges where forms dissolve into darkness. The subject should feel physically substantial, convincingly three-dimensional, and grounded in a deep, coherent space.\n\nFavor a concentrated, weighty composition over openness or decorative lightness. The mood should feel serious, intimate, theatrical, and psychologically charged without becoming melodramatic. Translate the supplied palette into luminous highlights, rich middle values, and deep shadow variations as needed, rather than keeping every color at the same brightness.\n\nAvoid pastel or crayon marks, visible paper grain, airy white gaps, flat interlocking color planes, cartoonish simplification, all-over brightness, decorative patterning, or loose unfinished brushwork.\n\nUsing this color palette:\n{{colorPalette}}",
+  "preview": {
+    "type": "generic"
+  },
+  "export": {
+    "type": "raw-only"
+  }
+}

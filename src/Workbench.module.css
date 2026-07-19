@@ -1,0 +1,188 @@
+/* P17: the workbench is embedded in the static landing document (#generator section)
+   rather than owning the viewport via a Mantine AppShell. `.shell` is the in-flow
+   wrapper — no `overflow`/`transform` here or on any ancestor (both would break the
+   sticky toolbar + sticky inspector). */
+.shell {
+  display: flow-root;
+}
+
+/* Replaces AppShell.Header: an in-flow bar that sticks to the top of the viewport while the
+   #generator section is on screen, then scrolls away with it. EXACTLY 56px tall — the sticky
+   inspector (SessionView.module.css) offsets by 56px, so this height is load-bearing. The
+   opaque body background + bottom border + z-index recreate the AppShell header's chrome so
+   content scrolls cleanly underneath. */
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 56px;
+  flex: none;
+  background: var(--mantine-color-body);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+/* Replaces AppShell.Main's padding. Reserves at least the rest of one viewport below the
+   56px toolbar so the loading→ready transition doesn't leave a short page (svh, not dvh,
+   so mobile chrome show/hide doesn't resize it). */
+.body {
+  padding: var(--mantine-spacing-md);
+  min-height: calc(100svh - 56px);
+}
+
+/* Loading + error gates: center their single card in the reserved body height. */
+.bodyCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* History Drawer: bound the content + body as flex columns with the body clipping its own
+   overflow, so HistoryRail's internal ScrollArea (h="100%") owns the scrolling and its
+   bottom-pinned "Clear history" action stays reachable — rather than the whole rail scrolling
+   inside the Drawer and pushing the button off-screen on long histories. */
+.drawerContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.drawerBody {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.drawerNav {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Header brand mark (P9): the multicolor banana in an embossed, green-anodized aluminum
+   frame — the user's 256px reference treatment (gradient frame + inner bezel + dual
+   drop-shadows) simplified to read crisply at 30px: one gradient frame, one inset bevel,
+   a single soft drop-shadow under the banana. Frame gradients are tuned per scheme via
+   light-dark() so the green anodize sits on the dark header without glowing. */
+
+/* The brand lockup is a link home to the landing document. It inherits the header's color and
+   drops the underline so there is no visual change from the old static block; only the
+   focus-visible ring (keyboard) and pointer cursor mark it as interactive. */
+.brandLink {
+  color: inherit;
+  text-decoration: none;
+  border-radius: 8px;
+}
+.brandLink:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 3px;
+}
+
+.brandMark {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 9px;
+  background: linear-gradient(
+    135deg,
+    light-dark(#a8baa8, #93a493) 0%,
+    light-dark(#788a78, #616f61) 100%
+  );
+  box-shadow:
+    inset 1px 1px 1px rgba(255, 255, 255, 0.45),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.3),
+    1px 1px 3px light-dark(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.55));
+}
+
+/* Phone-tight headers (P16): the 18px one-line wordmark (135px) plus the grown flap
+   board cannot share a narrow header — the wordmark used to wrap into three clipped
+   lines. Below the xs breakpoint the TITLE BLOCK goes screen-reader-only (the wordmark
+   stays in the DOM for AT) and the decorative bezel goes with it:
+   the phone header is burger • key symbol • flap board • theme toggle. The key pill
+   collapses to its symbol below sm (KeyPanel.module.css) and the spend pill drops its
+   word/coin (SpendPill.module.css). Digit cells NEVER clip — this budget carries a
+   5-cell board ($999.99) at 320px and an 8-cell board at 375px; the board always wins
+   over chrome. */
+/* Squeeze-proofing (Codex T2): when an extreme board width (7–8 digit totals) meets a
+   mid-size viewport, the one-line wordmark ellipsizes instead of wrapping out of the
+   56px header. */
+.titleBlock {
+  min-width: 0;
+}
+
+.titleBlock > * {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: $mantine-breakpoint-xs) {
+  .brandMark {
+    display: none;
+  }
+
+  .titleBlock {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.brandBezel {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: linear-gradient(
+    135deg,
+    light-dark(#8a9c8a, #6f7f6f) 0%,
+    light-dark(#9cb09c, #839583) 100%
+  );
+  box-shadow:
+    inset 1px 1px 2px rgba(0, 0, 0, 0.22),
+    inset -1px -1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.brandBanana {
+  /* SVG viewBox is 111.81×122.88 — slightly taller than wide. Sized close to the
+     reference's banana-to-bezel ratio so the fruit, not the frame, carries the mark. */
+  width: 18px;
+  height: 19.8px;
+  display: block;
+  filter: drop-shadow(0.5px 0.7px 0.6px rgba(0, 0, 0, 0.35));
+}
+
+/* Specimen tag: mirrors the static header's .byo-brand-tag (public/landing.css). A quiet mono
+   label held apart from the wordmark by a hairline divider. The 14px padding + 14px parent gap
+   put the tag at the same x as the landing's. It only rides wide headers; below 1400px it drops
+   (matching the landing's @media max-width:1399px) well before the phone breakpoints touch the
+   brand. */
+.brandTag {
+  padding-left: 14px;
+  /* Subtler than the toolbar's bottom rule (default-border): this small vertical hairline
+     mirrors the landing tag's --byo-border, which equals gray-2 (light) / dark-5 (dark) in
+     this zinc theme, so the two tags' dividers render identically. */
+  border-left: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  font-family: var(--mantine-font-family-monospace);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  white-space: nowrap;
+  /* Muted zinc, matching the landing tag's --byo-muted exactly in BOTH schemes
+     (gray-6 #52525b light / gray-4 #a1a1aa dark). Mantine's `dimmed` alias would drift
+     light in dark mode (dark-2 #d4d4d8), breaking header parity, so set the color directly. */
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+}
+
+@media (max-width: 1399px) {
+  .brandTag {
+    display: none;
+  }
+}

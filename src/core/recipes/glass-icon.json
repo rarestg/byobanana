@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "glass-icon",
+  "version": 3,
+  "name": "Glass icon",
+  "description": "Luminous frosted-glass icon: one chunky rounded silhouette with a glowing core and crisp refractive edges.",
+  "kind": "project-icon",
+  "comparable": true,
+  "promptTemplate": "Create one icon.\n\nSubject brief:\n{{subject}}\n\nBackground:\nFirst create one continuous solid {{backgroundColor}} field covering the complete square image area, including every edge and all four corners. Then place the centered icon artwork directly on that uninterrupted field.\n\nColor palette:\nAvailable hue palette: {{colorPalette}}. Treat these colors as a bias for the glass material's internal reflections, chromatic shifts, and dispersion, not as solid paint applied to surfaces. Refraction may create intermediate tints between these hues; steer the overall color character toward the palette without matching any hex value exactly. The background color is separate and does not count as a palette color.\n\nStyle contract:\nLuminous frosted-glass icon, not a photographed object or a scene. Reduce the subject to one bold, compact silhouette, then sculpt it as a single thick form of glass with a softly frosted, light-holding core inside a smooth, polished clear outer surface. The core glows gently from within, diffusing palette-biased color through the body in soft shifts of luminosity; the clear outer layer adds crisp refractive edges, subtle dispersion, and a few precise specular highlights. Keep the geometry chunky and rounded, with real internal thickness and no thin or fragile parts. Light it with a soft studio key from the upper left and a delicate rim light hugging the outline so the silhouette reads instantly. Keep all glow, bloom, and rim-light effects attached to the form, well within the central safe area; nothing luminous may drift toward the image edges. Protect legibility on any background: against a dark background the inner glow and rim light define the shape; against a light background deepen the core's color density and edge contrast so the form stays solid and unmistakable. Avoid a pedestal, base, dish, or platform beneath the form, see-through transparency that dissolves the silhouette, environmental reflections, tiny details, complex internal structures, murkiness that reads as dirt, and plastic-looking material. The result should feel serene, premium, and quietly futuristic: one glowing sculptural symbol. No pseudo-text, labels, letters, or logos. Keep every critical part within the central 80 percent of the canvas. Use bold, simple forms without details that disappear at small display sizes.\n",
+  "preview": {
+    "type": "folio-icon",
+    "sizes": [
+      80,
+      96,
+      112
+    ],
+    "backgrounds": {
+      "light": "#FAFAFA",
+      "dark": "#18181B"
+    }
+  },
+  "export": {
+    "type": "folio-icon",
+    "transparentOutsideCircle": true
+  }
+}

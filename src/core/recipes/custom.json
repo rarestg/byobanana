@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "custom",
+  "version": 2,
+  "name": "Custom image",
+  "description": "Your subject text is the entire prompt — no style rules added.",
+  "kind": "custom",
+  "comparable": false,
+  "promptTemplate": "{{subject}}",
+  "preview": {
+    "type": "generic"
+  },
+  "export": {
+    "type": "raw-only"
+  }
+}

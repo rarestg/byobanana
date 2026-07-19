@@ -1,0 +1,60 @@
+{
+  "name": "nano-banana-web",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "description": "BYOBanana: a browser-only image-generation and selection workbench over Google's Gemini image API. Bring your own Google API key; no backend.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build && node scripts/site-url.mjs && npm run check:dashes",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:worker": "npm run build && node scripts/build-worker.mjs && wrangler deploy --config worker-dist/wrangler.jsonc",
+    "screenshot": "node scripts/screenshot.mjs",
+    "verify:icon": "node scripts/verify-icon.mjs",
+    "verify:idb": "node scripts/verify-idb.mjs",
+    "verify:tabs": "node scripts/verify-tabs.mjs",
+    "verify:bfcache": "node scripts/verify-bfcache.mjs",
+    "verify:p10": "node scripts/verify-p10.mjs",
+    "verify:p12": "node scripts/verify-p12.mjs",
+    "verify:compress": "node scripts/verify-compress.mjs",
+    "check:dashes": "node scripts/check-dashes.mjs"
+  },
+  "dependencies": {
+    "@jsquash/jpeg": "1.6.0",
+    "@jsquash/oxipng": "2.3.0",
+    "@mantine/core": "9.4.1",
+    "@mantine/dropzone": "9.4.1",
+    "@mantine/form": "9.4.1",
+    "@mantine/hooks": "9.4.1",
+    "@mantine/notifications": "9.4.1",
+    "@phosphor-icons/react": "^2.1.10",
+    "libimagequant-wasm": "0.3.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "axe-core": "^4.12.1",
+    "fake-indexeddb": "^6.2.5",
+    "jsdom": "^25.0.1",
+    "postcss": "^8.5.6",
+    "postcss-preset-mantine": "1.18.0",
+    "postcss-simple-vars": "^7.0.1",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.11",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.93.0"
+  }
+}

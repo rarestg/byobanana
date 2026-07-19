@@ -1,0 +1,279 @@
+/* Results layout: contact sheet + sticky inspector. Ported from nano-banana-2
+   web/styles.css (.results-layout, .candidate-*, .terminal-placeholder, loading shimmer),
+   remapped onto Mantine CSS variables. A plain CSS grid with a sticky inspector column that
+   clears the workbench toolbar (P17: the in-flow 56px sticky toolbar, formerly the AppShell
+   header — see the .inspector `top` offset below). */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 336px;
+  gap: var(--mantine-spacing-xl);
+  align-items: start;
+}
+
+.sheet {
+  min-width: 0;
+  /* P10: horizontal inset (matching the "md" spacing token most Paper cards in this app use for
+     their own p="md" padding, e.g. RunSummary and the inspector's own Paper below) so this
+     un-carded region's edges line up with padded card content rather than sitting flush against
+     the AppShell padding. RunSummary/SetupForm are `maw={880} mx="auto"` flex items — auto
+     margins make them shrink-wrap to content width rather than stretch, so they only land at
+     this same left edge when the viewport is narrow enough that the cap doesn't bind; the
+     inspector's Paper (no maw) is the one genuinely full-width, always-comparable sibling. */
+  padding-inline: var(--mantine-spacing-md);
+}
+
+/* Sticky inspector: clears the 56px toolbar + body padding, scrolls its own overflow.
+   P11: slim, theme-aware scrollbar — this native scroller never had the treatment (the only
+   slim bars in the app are Mantine ScrollAreas). scrollbar-width covers Firefox + Chromium;
+   the -webkit rules cover Safari (Chromium ignores them once scrollbar-width is set). */
+.inspector {
+  position: sticky;
+  top: calc(56px + var(--mantine-spacing-md));
+  min-width: 0;
+  max-height: calc(100vh - 96px);
+  overflow: auto;
+  scrollbar-width: thin;
+  /* gray-5/dark-3, not default-border: the thumb needs ≥3:1 non-text contrast (WCAG 1.4.11). */
+  scrollbar-color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3)) transparent;
+}
+
+.inspector::-webkit-scrollbar {
+  width: 8px;
+}
+
+.inspector::-webkit-scrollbar-thumb {
+  background: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3));
+  border-radius: 4px;
+}
+
+.inspector::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (max-width: 1080px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .inspector {
+    position: static;
+    max-height: none;
+  }
+}
+
+.group + .group {
+  margin-top: var(--mantine-spacing-xl);
+  padding-top: var(--mantine-spacing-lg);
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+/* P16: relative anchor for the copy control; carries the block's width cap (moved from
+   .prompt) so the icon pins to the visible block's corner, not the full sheet width. */
+.promptWrap {
+  position: relative;
+  max-width: min(100%, 114ch);
+  margin-top: var(--mantine-spacing-xs);
+}
+
+.promptCopy {
+  position: absolute;
+  top: 6px;
+  right: 14px; /* clear of the 8px slim scrollbar */
+}
+
+.prompt {
+  /* P10 widened from a flat 64ch; P14 grows it 1.5× (76ch → 114ch) — spans the arm group
+     up to the available room when the contact sheet is wide, never crawling under the
+     sticky inspector column (the group itself never exceeds the .sheet grid track, so
+     100% already respects that boundary). P16: the width cap lives on .promptWrap; the
+     right padding reserves a gutter for the copy icon so text never runs beneath it. */
+  max-height: 220px;
+  margin: 0;
+  padding: var(--mantine-spacing-xs);
+  padding-right: 44px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: var(--mantine-font-size-xs);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-xs);
+  background: var(--mantine-color-default-hover);
+  /* P14: the P11 slim-scrollbar treatment (the inspector got it; this scroller was
+     missed). Same tokens: thumb ≥3:1 non-text contrast, track transparent. */
+  scrollbar-width: thin;
+  scrollbar-color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3)) transparent;
+}
+
+.prompt::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.prompt::-webkit-scrollbar-thumb {
+  background: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3));
+  border-radius: 4px;
+}
+
+.prompt::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Candidate card ---------------------------------------------------------- */
+
+.card {
+  min-width: 0;
+  position: relative;
+}
+
+.primaryBadge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.exportCheckbox {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 1;
+}
+
+/* CS-6: this checkbox floats over the generated image, so it can land on ANY pixels. Measured
+   against its own neighbouring pixels over near-white, near-black, busy-checker and mid-grey test
+   imagery in both schemes, the unchecked box's best edge fell as low as 1.69:1. Two parts:
+   1. the UNCHECKED box's own outline moves off Mantine's gray-4/dark-4 onto gray-5/dark-3, the
+      same "line that must clear 3:1" pair as the SegmentedControl ring in app.css: 2.56/2.47 →
+      4.83/6.48 against its own opaque fill, a pair no image can reach. Scoped to :not(:checked)
+      so the checked box keeps its teal border.
+   2. a 1px halo at the opposite end of the ladder from the box's own face, so the two together
+      span the range: against a FLAT background the better of the two is bounded below at 4.21:1
+      in light and 3.99:1 in dark whichever way the image goes, where a mid-ladder neutral
+      (white + gray-5) bottoms out at 2.20:1. That bound is a flat-background bound, not a spatial
+      guarantee — high-frequency imagery can still put a matching pixel beside one tone somewhere
+      along the edge — so it is backed by measurement: minima over a 4px black/white checker are
+      4.24 light / 3.40 dark, up from 1.83 / 1.69.
+   The CHECKED box is identified by its own glyph against its opaque teal fill (5.47/9.52), which
+   no image can contaminate, and gains the same complementary halo.
+   box-shadow, not a second border: layout and hit geometry are unchanged (24px box, 6px inset)
+   and only the painted footprint grows 1px, so nothing shifts relative to the Primary badge on a
+   narrow 2-up card. */
+.exportCheckbox input {
+  box-shadow: 0 0 0 1px light-dark(var(--mantine-color-gray-9), var(--mantine-color-dark-0));
+}
+
+.exportCheckbox input:not(:checked) {
+  border-color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3));
+}
+
+.focusButton {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-default);
+  cursor: pointer;
+  color: inherit;
+}
+
+.focusButton:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.card.focused .focusButton {
+  border-color: var(--mantine-primary-color-filled);
+  box-shadow: 0 0 0 2px var(--mantine-primary-color-filled);
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Queued/running fill: Mantine Skeleton fills the square; running adds a centered spinner. */
+.loadingWrap {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.loaderOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.terminal {
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 100%;
+  padding: var(--mantine-spacing-sm);
+  text-align: center;
+  background: var(--mantine-color-default-hover);
+  color: var(--mantine-color-dimmed);
+  font-size: var(--mantine-font-size-xs);
+  animation: none;
+}
+
+.terminalFailed {
+  /* P15: the scheme-aware danger-text token (light red-7 / dark red-3 — see app.css), not a
+     fixed shade: the new deep red-6 would go dim on dark surfaces. */
+  color: var(--mantine-color-red-light-color);
+}
+
+.terminalIcon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.cardLabel {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-xs);
+  padding-top: 6px;
+}
+
+/* "Cancel remaining" while a run is in flight (P9): a quiet shimmer sweep signals a live,
+   cancelable process. Same reduced-motion gate as the spend pill, tuned subtler (weaker
+   tint, slower sweep) — the pill is the reference intensity, not a target to match. */
+.cancelLive {
+  position: relative;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cancelLive::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 30%,
+      color-mix(in srgb, var(--mantine-color-red-light-color) 16%, transparent) 50%,
+      transparent 70%
+    );
+    transform: translateX(-100%);
+    animation: cancel-sweep 2.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes cancel-sweep {
+    to {
+      transform: translateX(100%);
+    }
+  }
+}
+
+

@@ -1,0 +1,119 @@
+/* Selectable cards (recipes + palettes). Mantine does NOT style Checkbox.Card /
+   Radio.Card selection for us, so every state is drawn here: default, hover, focus,
+   selected ([data-checked]), and disabled. Selection is not color-only — the selected
+   card gains a thicker accent ring AND a visible check badge (rendered in JSX). */
+
+.card {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-radius: var(--mantine-radius-md);
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  text-align: left;
+  transition: border-color 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.card:hover:not(:disabled) {
+  border-color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3));
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.card[data-checked] {
+  border-color: var(--mantine-primary-color-filled);
+  box-shadow: inset 0 0 0 1px var(--mantine-primary-color-filled);
+  background: light-dark(var(--mantine-color-workbench-0), var(--mantine-color-dark-5));
+}
+
+.card:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* The check badge shown on a selected card (non-color-only selection cue). The badge is
+   ALWAYS rendered — invisible when unchecked — so its space is permanently reserved and
+   selecting a card never reflows the text or changes the card height (P8 jog fix). */
+.checkBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--mantine-primary-color-filled);
+  /* --nb-primary-contrast, not Mantine's --mantine-primary-color-contrast: with
+     autoContrast off the latter stays white and fails on the light dark-mode accent
+     (P14 — the same P7 gap the filled buttons had). */
+  color: var(--nb-primary-contrast);
+  font-size: 11px;
+  line-height: 1;
+  flex: none;
+}
+
+.checkBadgeIdle {
+  visibility: hidden;
+}
+
+/* Collapsed-settings toggle: an obviously clickable bordered bar with hover state; the
+   chevron rotates when expanded. Summary chips render inside while collapsed. */
+.settingsBar {
+  width: 100%;
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-radius: var(--mantine-radius-md);
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.settingsBar:hover {
+  border-color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3));
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+}
+
+.settingsBar:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.settingsChevron {
+  flex: none;
+  color: var(--mantine-color-dimmed);
+  transition: transform 150ms ease;
+}
+
+.settingsChevron[data-open] {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settingsChevron {
+    transition: none;
+  }
+}
+
+/* Palette swatch strip. */
+.swatch {
+  width: 100%;
+  height: 28px;
+  border-radius: var(--mantine-radius-sm);
+  overflow: hidden;
+  display: block;
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+}
+
+/* Reference thumbnail. */
+.thumb {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: var(--mantine-radius-sm);
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+  flex: none;
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-7));
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "modern-flat-icon",
+  "version": 3,
+  "name": "Modern flat icon",
+  "description": "Soft contemporary product glyph: rounded geometric forms, one gentle two-tone gradient, generous negative space.",
+  "kind": "project-icon",
+  "comparable": true,
+  "promptTemplate": "Create one icon.\n\nSubject brief:\n{{subject}}\n\nBackground:\nFirst create one continuous solid {{backgroundColor}} field covering the complete square image area, including every edge and all four corners. Then place the centered icon artwork directly on that uninterrupted field.\n\nColor palette:\nAvailable foreground palette: {{colorPalette}}. Draw the icon's foreground shapes from this palette unless the subject brief asks for different colors; you do not need to use every color. The background color is separate and does not count as a palette color.\n\nStyle contract:\nModern flat product icon with soft depth, not a scene. Distill the subject into one serene, front-facing glyph: a single dominant silhouette of smooth geometric forms with continuously rounded corners, plus at most two supporting shapes. One soft linear two-tone gradient is allowed inside the dominant form only, blending exactly two palette colors in a gentle vertical or diagonal wash; every other shape stays one solid palette color. Keep optical weight consistent across all elements and hold generous negative space around the glyph so it floats with calm authority. Edges stay crisp and geometric; the gradient supplies quiet dimensionality, never simulated lighting. The result should feel like a polished glyph from a contemporary tech product: minimal, warm, instantly parseable. No hard shadows, long shadows, gloss, bevels, outlines, texture, noise, 3D perspective, photorealism, pseudo-text, labels, letters, or logos. Keep every critical part within the central 80 percent of the canvas. Use bold, simple forms without details that disappear at small display sizes.\n",
+  "preview": {
+    "type": "folio-icon",
+    "sizes": [
+      80,
+      96,
+      112
+    ],
+    "backgrounds": {
+      "light": "#FAFAFA",
+      "dark": "#18181B"
+    }
+  },
+  "export": {
+    "type": "folio-icon",
+    "transparentOutsideCircle": true
+  }
+}

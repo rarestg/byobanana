@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "airy-pastel-modernist",
+  "version": 3,
+  "name": "Airy pastel modernist",
+  "description": "Soft pastel drawing on bright paper: light layered strokes with an airy, sun-washed feel.",
+  "kind": "artwork",
+  "comparable": true,
+  "promptTemplate": "Create one luminous, airy illustration.\n\nThis is your subject:\n{{subject}}\n\nUsing only this color palette:\n{{colorPalette}}\nTreat its first, lightest color as the bright off-white paper ground.\n\nDraw the subject in this style:\nCreate a refined pastel-impressionist / modernist illustration. The image should feel hand-made on bright off-white toothy paper, with that paper texture integrated into the artwork. Use dry oil pastel, wax pastel, soft pastel, or textured colored pencil, optionally with a light watercolor or gouache underlayer. Build the image from many small, layered, broken, directional strokes and clusters of color, so forms emerge through texture and color relationships rather than heavy modeling.\n\nKeep the subject clearly recognizable, but gently simplify it into elegant, lightly geometric shapes and interlocking planes. The stylization should feel sophisticated and mature, not rigid, cartoonish, or childish. Use soft, implied edges and selective broken contour lines or delicate linework to organize the image, while avoiding hard outlines around everything.\n\nLet the paper texture remain visible throughout, with some areas left partially open or lightly filled so the composition stays breathable and light. The overall feeling should be spacious, graceful, sun-washed, and poetic, with a sense of air, atmosphere, and visual ease. Favor harmonious color variety and subtle tonal shifts over realism or dramatic contrast.\n\nThe final image should feel refined, tactile, and serene — not thickly painted, overly polished, messy or erratic, strongly cubist, or abstract.",
+  "preview": {
+    "type": "generic"
+  },
+  "export": {
+    "type": "raw-only"
+  }
+}

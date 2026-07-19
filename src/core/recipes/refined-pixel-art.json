@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "refined-pixel-art",
+  "version": 2,
+  "name": "Refined pixel art",
+  "description": "Clean, elegant pixel art: crisp silhouettes and restrained shading, never cluttered.",
+  "kind": "artwork",
+  "comparable": true,
+  "promptTemplate": "This is your subject:\n{{subject}}\n\nDraw the subject in this style:\nRender the subject as tasteful, elegant pixel art with a refined, intentional, high-design feel. The image should be created as true pixel art: clean, deliberate pixels, clear silhouettes, simplified readable forms, and carefully placed details. Keep the subject recognizable, but stylize it through strong shape design, controlled proportions, and selective simplification rather than realism.\n\nUse a restrained, harmonious composition with a clear focal point and a sense of visual balance. Favor crisp outlines only where they help structure the image; avoid heavy black contouring around everything. Build form through thoughtful pixel clustering, selective shading, and subtle value shifts rather than noisy texture. Dithering may be used sparingly and elegantly, only when it improves transitions or atmosphere. Anti-aliasing may be used selectively for polish, but keep the overall image crisp and pixel-authentic.\n\nThe mood should feel polished, graceful, and aesthetically cohesive — not childish, messy, muddy, or overly gamey. Avoid exaggerated cartoon proportions unless requested. Avoid visual clutter, random detail, banding, pillow shading, over-dithering, noisy textures, or excessive contrast. The final result should feel like beautifully composed pixel art with a refined artistic sensibility.\n\nUsing this color palette:\n{{colorPalette}}",
+  "preview": {
+    "type": "generic"
+  },
+  "export": {
+    "type": "raw-only"
+  }
+}

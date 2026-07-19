@@ -1,0 +1,81 @@
+/* API-key onboarding banner (P8). Sits above the (inert) setup form until a key validates,
+   then flies toward the header key pill (up-right) while fading — the Collapse wrapper in
+   Workbench animates the vacated height closed. Reduced motion skips the animation entirely
+   (Workbench unmounts it instantly). Designed for BOTH schemes via light-dark(). */
+
+.banner {
+  border-color: var(--mantine-primary-color-filled);
+  background: light-dark(var(--mantine-color-workbench-0), var(--mantine-color-dark-6));
+  /* The fly transform should shrink toward the top-right (the pill's general direction). */
+  transform-origin: top right;
+}
+
+/* Two-column card: a flexible left column (heading + lede on top, a bottom-pinned footer) and a
+   fixed ~320px right column (key input + choice + Connect). Grid CHILDREN are flat and ordered
+   intro -> form -> footer in the DOM so the key input precedes the footer link in tab order; the
+   grid areas place the footer at the bottom-left visually. The spanning form sets the card
+   height, the `1fr` first row absorbs the slack (intro stays top-aligned), and the footer sits in
+   the trailing `auto` row. */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-areas:
+    "intro form"
+    "footer form";
+  grid-template-rows: 1fr auto;
+  column-gap: var(--mantine-spacing-xl);
+  row-gap: var(--mantine-spacing-lg);
+}
+
+.intro {
+  grid-area: intro;
+}
+
+.form {
+  grid-area: form;
+}
+
+.footer {
+  grid-area: footer;
+  align-self: end;
+  padding-top: var(--mantine-spacing-sm);
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+/* Echo the mockup's "GOOGLE API KEY" label without changing the accessible text (which stays
+   "Google API key" for getByLabelText and the verify-p8 harness). */
+.keyLabel {
+  text-transform: uppercase;
+}
+
+/* Below the sm breakpoint the fixed 320px column would crush the left side, so stack to one
+   column (intro, then form, then footer). */
+@media (max-width: $mantine-breakpoint-sm) {
+  .grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "intro"
+      "form"
+      "footer";
+    grid-template-rows: auto auto auto;
+  }
+}
+
+.flying {
+  animation: banner-fly 430ms ease-in forwards;
+  pointer-events: none;
+}
+
+@keyframes banner-fly {
+  to {
+    transform: translate(22%, -140%) scale(0.15);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flying {
+    animation: none;
+    opacity: 0;
+  }
+}

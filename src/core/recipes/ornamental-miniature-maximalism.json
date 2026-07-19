@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "ornamental-miniature-maximalism",
+  "version": 2,
+  "name": "Ornamental miniature maximalism",
+  "description": "Richly detailed miniature painting: jewel colors, fine linework, and dense ornamental pattern.",
+  "kind": "artwork",
+  "comparable": true,
+  "promptTemplate": "This is your subject:\n{{subject}}\n\nDraw the subject in this style:\nTransform the subject into an opulent ornamental miniature painting with flattened, stage-like space, intricate contour drawing, and a dense but carefully organized field of visual detail. Preserve the subject’s essential identity while translating its forms into elegant silhouettes, rhythmic curves, repeated motifs, patterned surfaces, and finely articulated decorative elements.\n\nUse crisp, controlled linework and opaque, jewel-like areas of color. Treat clothing, architecture, foliage, objects, backgrounds, and abstract areas as opportunities for distinctive pattern, texture, and ornament. Include small secondary details that reward close viewing, while maintaining a clear focal hierarchy so that the image remains legible rather than chaotic.\n\nUse flattened or symbolic perspective instead of naturalistic depth. Separate overlapping forms through contour, pattern, scale, and color contrast rather than atmospheric haze or realistic shadow. Apply the supplied palette faithfully, varying its values and opacity while avoiding unrelated colors. Metallic-looking accents may be used sparingly when they are compatible with the palette.\n\nThe composition should feel abundant, precise, ceremonial, and meticulously crafted. Favor controlled intricacy over open white space, loose gesture, or naturalistic atmosphere. The result should be maximalist but disciplined—not cluttered, gaudy, childish, or randomly decorative.\n\nAvoid loose pastel strokes, soft dissolving edges, empty atmospheric expanses, photorealistic lighting, thick impasto, rough expressionist marks, rigid poster geometry, or unfinished-looking areas.\n\nUsing this color palette:\n{{colorPalette}}",
+  "preview": {
+    "type": "generic"
+  },
+  "export": {
+    "type": "raw-only"
+  }
+}

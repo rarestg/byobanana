@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "impact-icon",
+  "version": 3,
+  "name": "Impact icon",
+  "description": "High-energy flat icon: one tilted dominant silhouette and up to two accent shapes in bold solid colors.",
+  "kind": "project-icon",
+  "comparable": true,
+  "promptTemplate": "Create one icon.\n\nSubject brief:\n{{subject}}\n\nBackground:\nFirst create one continuous solid {{backgroundColor}} field covering the complete square image area, including every edge and all four corners. Then place the centered icon artwork directly on that uninterrupted field.\n\nColor palette:\nAvailable foreground palette: {{colorPalette}}. Draw the icon's foreground shapes from this palette unless the subject brief asks for different colors; you do not need to use every color. The background color is separate and does not count as a palette color.\n\nStyle contract:\nLoud high-energy icon, not a scene. Reduce the subject to one dominant silhouette and charge it with kinetic graphic force: tilt the main form on a confident diagonal, exaggerate its proportions, and let at most two accent shapes, such as a thick motion streak, a spark, or an offset echo of the silhouette, amplify the energy. Compose asymmetrically: throw the visual weight to one side, then snap the balance back with a single decisive accent. Use large flat planes of the boldest palette colors with razor-crisp edges and aggressive scale contrast between the dominant form and its accents. The icon should land like a shout: instant, punchy, impossible to ignore, yet built from very few shapes. No clutter, and no gradients, texture, noise, lighting, cast shadows, gloss, bevels, photorealism, pseudo-text, labels, letters, or logos. Keep every critical part within the central 80 percent of the canvas. Use bold, simple forms without details that disappear at small display sizes.\n",
+  "preview": {
+    "type": "folio-icon",
+    "sizes": [
+      80,
+      96,
+      112
+    ],
+    "backgrounds": {
+      "light": "#FAFAFA",
+      "dark": "#18181B"
+    }
+  },
+  "export": {
+    "type": "folio-icon",
+    "transparentOutsideCircle": true
+  }
+}

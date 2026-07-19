@@ -1,0 +1,373 @@
+/* SpendPill split-flap treatment (P12, R3 redesign in P16) — "departure board" digit
+   cells inside a quiet zinc capsule. The schemes invert like real hardware: dark keeps
+   light-on-near-black flaps; light is the classic white split-flap clock — black digits
+   on white cards with grey seams. The coin sits on a muted-brass embossed disc rhyming
+   with the header brand bezel. While a run is live: teal ring + spinning coin +
+   continuously rolling digit columns (dimmed by a veil so passing digits read as motion
+   texture, not a value). On completion the columns settle left → right onto the
+   confirmed total with a clack. P8's shimmer sweep and P12-removed pulsing dot are gone
+   — the rolling digits ARE the live animation. All motion is transform/opacity-only and
+   fully disabled under prefers-reduced-motion (the JS side also never schedules timers
+   there — this block is the visual backstop). */
+
+.pill {
+  --acc: var(--mantine-primary-color-filled);
+  position: relative;
+  height: 30px; /* grew with the 1.3× board (24px cells); still fits the 56px header */
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  white-space: nowrap;
+  padding: 0 12px 0 7px;
+  border-radius: 999px;
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-7));
+  /* Dark stops nudged one step lighter in P14 alongside the dark-surface lift, so the
+     capsule keeps standing off the (now lighter) header. */
+  background: linear-gradient(
+    180deg,
+    light-dark(#ffffff, #2e2e34),
+    light-dark(#f4f4f5, #202026)
+  );
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-2));
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+button.pill {
+  cursor: pointer;
+}
+
+button.pill:hover {
+  border-color: color-mix(in srgb, var(--acc) 45%, transparent);
+}
+
+/* Belt-and-braces on top of Mantine's automatic focus-visible class. */
+.pill:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: 2px;
+}
+
+/* Live state: teal ring + small halo. The rolling digits + spinning coin carry the
+   "in progress" signal (no pulsing dot, no shimmer). */
+.active {
+  border-color: color-mix(in srgb, var(--acc) 60%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--acc) 10%, transparent),
+    0 0 9px color-mix(in srgb, var(--acc) 22%, transparent);
+}
+
+/* Coin — muted brass, embossed like the header brandMark bezel; spins while live. */
+.coin {
+  width: 17px;
+  height: 17px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #6b4d14;
+  background: radial-gradient(circle at 34% 30%, #f2dc9b, #d9b458 55%, #a07f2e);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.55),
+    inset 0 -1.5px 2px rgba(96, 64, 10, 0.4),
+    0 1px 2px rgba(0, 0, 0, 0.22);
+}
+
+.active .coin {
+  animation: coin-spin 1.1s linear infinite;
+}
+
+@keyframes coin-spin {
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+/* Micro-label: DOM text stays "Total spend" (tests/label-in-name); CSS uppercases.
+   P14: sized to MATCH the key-status pill's Badge(size=lg) label (13px / 700 / 0.25px
+   uppercase) so the two header pills read as siblings. gray-6 (not gray-5): at 13px the
+   label is real text and needs AA (~4.5:1) on the white capsule, not just decoration. */
+.word {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.25px;
+  text-transform: uppercase;
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-2));
+}
+
+.active .word {
+  color: var(--acc);
+}
+
+/* Width-tight headers (below Mantine's sm breakpoint, where the header already
+   compresses): drop the micro-label and the coin disc, keeping the full board — digit
+   cells must NEVER clip (a cut-off dollar figure would read as a smaller, wrong value;
+   the old Badge merely ellipsized TEXT). The teal ring still signals liveness, and the
+   button's aria-label still names the pill "Total spend". P14: the query now genuinely
+   matches the sm breakpoint (it said "below sm" but fired at 30em) — the grown 13px
+   micro-label otherwise squeezes the key pill into ellipsis in the 480–768px band. */
+@media (max-width: 48em) {
+  .word,
+  .coin {
+    display: none;
+  }
+
+  .pill {
+    padding-left: 12px;
+  }
+}
+
+/* ---- the flap board ---- */
+
+.board {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* System mono stack for the board's departure-flap glyphs (P14): naturally tabular
+   digits with a hardware feel — no font bundling. */
+.board {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+/* The `$` is a PLAIN glyph (no card — real boards don't flap the currency sign), teal in
+   both schemes, but sized/weighted/centered like a sibling of the flap digits: the same
+   grid-centering box and a runtime nudge (see computeSeamNudge in SpendPill.tsx) lock it
+   to the digits' optical middle. R3 sign-off: slightly LARGER than the digits' 16px so
+   it visually balances the board's weight; --sym-nudge is measured from the $'s own
+   metrics at this size (the digits' nudge would leave a small offset). */
+.sym {
+  display: grid;
+  place-items: center;
+  height: var(--ch, 24px);
+  padding: 0 1px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--acc);
+  transform: translateY(var(--sym-nudge, var(--seam-nudge, 0px)));
+}
+
+/* Plain-text fallback for a non-live, non-dollar outcome (honesty rule: no committed
+   digit cells without known dollars). A LIVE unknown state uses the rolling flap board
+   instead of text (see UnknownBoard), so there is no text "Calculating…" any more. */
+.fallbackText {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0 2px;
+}
+
+/* Unknown/placeholder board: the same flap chrome as a real value but without committed
+   digits — an explicit "no spend known" state (honesty rule: never a fake $0.00). At rest
+   it is static dashes ("$ -.--"); while a run is live with no known dollars the digit
+   positions ROLL as motion texture (the resting frame of each rolling strip is still a
+   dash). The glyphs are gently dimmed to read as a placeholder while staying AA-legible in
+   both schemes; the teal $ anchor stays full. */
+.unknownBoard .glyph {
+  opacity: 0.72;
+}
+
+/* One flap column. Integer px cell size: fractional transforms blur small glyphs (esp.
+   Safari). Entering cells claim their full width IMMEDIATELY (one layout shift, no
+   per-frame layout, no Floating UI churn) and animate opacity/scale only.
+   Flap faces are two flat tones split at the hinge (the top card catches the light).
+   EDGE TREATMENT (R3, symmetric by construction): exactly one 1px outer ring
+   (box-shadow spread) + a soft drop shadow — NO inset top/bottom shadows (the old
+   `inset 0 1px 0` top lip stacked on the ring into a stray double outline on the top
+   edge only). Curvature lives solely in ::after, whose vignette uses identical
+   offsets/alphas at both ends. */
+.cell {
+  /* --ch is written on the .board container by SpendPill.tsx from flapMath.CELL_HEIGHT
+     (single source of truth); the value here is only a defensive fallback. */
+  --cw: 16px;
+  width: var(--cw);
+  height: var(--ch, 24px);
+  border-radius: 4.5px;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    light-dark(#ffffff, #26262c) 0%,
+    light-dark(#ffffff, #26262c) 50%,
+    light-dark(#eeeef2, #191920) 50%,
+    light-dark(#eeeef2, #191920) 100%
+  );
+  box-shadow:
+    0 0 0 1px light-dark(rgba(24, 24, 27, 0.16), rgba(255, 255, 255, 0.09)),
+    0 1px 2px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* The decimal separator rides a STATIC flap card at the SAME width as a digit cell (same
+   chrome + --cw, one glyph, never rolls/clacks — real boards mount punctuation on a card
+   but don't flap it). Kept as its own class so the TSX/harness class mapping stays
+   defined and the dot cell can be targeted. */
+.dotcell {
+  --cw: 16px;
+}
+
+.static .strip {
+  transform: none;
+}
+
+/* Dim veil while rolling: passing digits read as motion texture, not a fake value.
+   (Opacity veil instead of filter:blur — blur rasterizes tiny text badly + costs more.)
+   The light veil is much lighter: teal-adjacent dark glyphs on white cards lose
+   legibility fast under a heavy wash — .25 reads visibly dimmed yet still legible. */
+.cell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: light-dark(rgba(250, 250, 251, 0.25), rgba(18, 18, 22, 0.52));
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.rolling::before {
+  opacity: 1;
+}
+
+/* Hinge seam + cylinder shading — the split-flap tell, a gradient overlay (no real 3D).
+   px stops instead of %: the hinge stays a 2px line at 50% ± 1px at any cell size, and
+   the end vignettes are 5px deep and identical top/bottom. LIGHT scheme (base rule, R3):
+   NO white catch-light — on white cards it painted a glare band across the digit ink;
+   the cut reads as a thin dark hinge line + a soft cast shadow fading below it. */
+.cell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    rgba(9, 9, 11, 0.08) 0,
+    transparent 5px,
+    transparent calc(50% - 4px),
+    rgba(9, 9, 11, 0.1) calc(50% - 1px),
+    rgba(9, 9, 11, 0.26) calc(50% - 1px),
+    rgba(9, 9, 11, 0.26) calc(50% + 1px),
+    rgba(9, 9, 11, 0.08) calc(50% + 1px),
+    transparent calc(50% + 4px),
+    transparent calc(100% - 5px),
+    rgba(9, 9, 11, 0.08) 100%
+  );
+}
+
+/* DARK scheme keeps the R2 treatment: deeper vignettes, a harder hinge, and a 1px
+   catch-light under the cut (reads as light grazing the lower card's top edge). The
+   stop STRUCTURE differs from light, so this is a full override, not a light-dark(). */
+:global([data-mantine-color-scheme="dark"]) .cell::after {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.32) 0,
+    transparent 5px,
+    transparent calc(50% - 4px),
+    rgba(0, 0, 0, 0.28) calc(50% - 1px),
+    rgba(0, 0, 0, 0.6) calc(50% - 1px),
+    rgba(0, 0, 0, 0.6) calc(50% + 1px),
+    rgba(255, 255, 255, 0.07) calc(50% + 1px),
+    rgba(255, 255, 255, 0.07) calc(50% + 2px),
+    transparent calc(50% + 5px),
+    transparent calc(100% - 5px),
+    rgba(0, 0, 0, 0.32) 100%
+  );
+}
+
+/* Entering state for digit-count growth ($9.99 → $10.00): fade/scale in at full width. */
+.pre {
+  opacity: 0;
+  transform: scale(0.55);
+}
+
+/* The vertical digit strip, moved only by translateY (compositor-only). Unitless --j
+   (a strip index) × --ch is valid CSS math; --j is set imperatively per cell. */
+.strip {
+  display: block;
+  transform: translateY(calc(-1 * var(--ch, 24px) * var(--j, 20)));
+}
+
+.rolling .strip {
+  will-change: transform; /* only while animating */
+  animation: flap-roll var(--dur, 0.62s) linear infinite;
+  animation-delay: var(--ph, 0s);
+}
+
+/* Glyph centering: place-items centers the 1em LINE BOX, but the digit's ink is not
+   centered inside its line box (it hangs off the baseline, whose position is a font
+   metric). --seam-nudge is measured at runtime from the rendered font (computeSeamNudge
+   in SpendPill.tsx) so the ink's optical middle lands exactly on the 50% hinge line.
+   lining-nums is load-bearing: the nudge math treats digit ink as the baseline→cap
+   band, which only holds for lining (not oldstyle) figures. */
+.glyph {
+  display: grid;
+  place-items: center;
+  width: var(--cw);
+  height: var(--ch, 24px);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: light-dark(#18181b, #f4f4f5);
+  text-shadow: light-dark(0 1px 0 rgba(255, 255, 255, 0.55), 0 1px 1px rgba(0, 0, 0, 0.6));
+  transform: translateY(var(--seam-nudge, 0px));
+}
+
+.active .glyph {
+  color: light-dark(var(--mantine-color-workbench-7), var(--mantine-color-workbench-1));
+}
+
+/* Continuous roll: sweep the BOTTOM decade (j 30 → 20; both endpoints show "0") and
+   wrap seamlessly, leaving ≥2 decades of forward settle room above. Duration + phase
+   are set inline per cell so columns desynchronize. */
+@keyframes flap-roll {
+  from {
+    transform: translateY(calc(-30 * var(--ch, 24px)));
+  }
+  to {
+    transform: translateY(calc(-20 * var(--ch, 24px)));
+  }
+}
+
+/* Settle clack: tiny mechanical nudge + brightness pop when a column lands. */
+@keyframes flap-clack {
+  0% {
+    transform: translateY(0);
+    filter: brightness(1);
+  }
+  35% {
+    transform: translateY(1.7px);
+    filter: brightness(1.4);
+  }
+  100% {
+    transform: translateY(0);
+    filter: brightness(1);
+  }
+}
+
+.clack {
+  animation: flap-clack 0.16s ease-out;
+}
+
+/* Reduced motion: FULL disable — no loop, no settle transition, no clack, no coin
+   spin; values change instantly. The live state stays visible but static (teal ring).
+   The JS side independently checks the preference and never schedules stagger timers. */
+@media (prefers-reduced-motion: reduce) {
+  .rolling .strip,
+  .active .coin,
+  .clack {
+    animation: none;
+  }
+
+  .strip {
+    transition: none !important;
+  }
+
+  .cell,
+  .cell::before {
+    transition: none;
+  }
+}

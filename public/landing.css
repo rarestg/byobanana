@@ -1,0 +1,1201 @@
+/* Static landing-document styles for BYOBanana.
+ *
+ * This stylesheet paints BEFORE the React/Mantine bundle mounts (it is linked
+ * render-blocking from index.html) and must keep working with JavaScript disabled.
+ * It therefore uses NONE of Mantine's runtime theme variables (those are injected by
+ * MantineProvider after mount and would cause a flash) — only static, scheme-specific
+ * tokens keyed off the data-mantine-color-scheme attribute that public/theme-init.js
+ * sets on <html> pre-paint, with a prefers-color-scheme fallback for the JS-off case.
+ *
+ * The token values mirror src/theme.ts exactly (page #f4f4f5 / dark-7 #141418, text
+ * #18181b / dark-0 #fafafa, teal-7 / teal-4 accent) so there is no seam between this
+ * static document and the workbench that mounts inside #generator. */
+
+:root {
+  /* color-scheme so native UI (scrollbars, form controls) matches the active tone on the static
+   * pages, mirroring what Mantine sets on the app. Keyed the same way as the tokens below. */
+  color-scheme: light;
+  --byo-page: #f4f4f5;
+  --byo-text: #18181b;
+  --byo-muted: #52525b;
+  --byo-border: #e4e4e7;
+  /* Header separator: matches the app toolbar's computed border-bottom
+   * (--mantine-color-default-border) so the two headers render an identical rule.
+   * The subtler --byo-border stays for panel/toggle edges. */
+  --byo-header-border: #a1a1aa;
+  --byo-accent: #0f766e;
+  --byo-accent-text: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --byo-page: #141418;
+    --byo-text: #fafafa;
+    --byo-muted: #a1a1aa;
+    --byo-border: #28282e;
+    --byo-header-border: #5b5b64;
+    --byo-accent: #2dd4bf;
+    --byo-accent-text: #18181b;
+  }
+}
+/* The in-app theme toggle stamps this attribute on <html>; it must win over the OS
+ * media query above (and stays higher-specificity than Mantine's own `body` rule, so
+ * the page tone is stable from first paint through mount and through runtime toggles). */
+:root[data-mantine-color-scheme="light"] {
+  color-scheme: light;
+  --byo-page: #f4f4f5;
+  --byo-text: #18181b;
+  --byo-muted: #52525b;
+  --byo-border: #e4e4e7;
+  --byo-header-border: #a1a1aa;
+  --byo-accent: #0f766e;
+  --byo-accent-text: #ffffff;
+}
+:root[data-mantine-color-scheme="dark"] {
+  color-scheme: dark;
+  --byo-page: #141418;
+  --byo-text: #fafafa;
+  --byo-muted: #a1a1aa;
+  --byo-border: #28282e;
+  --byo-header-border: #5b5b64;
+  --byo-accent: #2dd4bf;
+  --byo-accent-text: #18181b;
+}
+
+/* Phase 18 additions, same static-token pattern (OS media fallback + attribute override):
+ * --byo-surface = raised card/receipt surface; --byo-banana = the one decorative yellow mark
+ * (the specimen tick, never a large field); --byo-mono = system mono stack for
+ * specimen labels, the figure caption, and the trust receipt. Scheme-independent mono lives on
+ * the base :root; surface/banana carry a value per scheme. */
+/* --byo-bezel-* replicate the app header's embossed green-anodized brand frame
+ * (Workbench.module.css .brandMark/.brandBezel) statically. The app uses CSS light-dark(),
+ * which keys off the CSS `color-scheme` property; the static landing only sets the
+ * data-mantine-color-scheme ATTRIBUTE, so the two frame gradients + the outer drop-shadow ride
+ * the same OS-media + attribute token pattern as every other scheme token here. */
+:root {
+  --byo-surface: #ffffff;
+  --byo-banana: #f5a800;
+  --byo-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --byo-bezel-outer-a: #a8baa8;
+  --byo-bezel-outer-b: #788a78;
+  --byo-bezel-inner-a: #8a9c8a;
+  --byo-bezel-inner-b: #9cb09c;
+  --byo-bezel-shadow: rgba(0, 0, 0, 0.25);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --byo-surface: #1e1e23;
+    --byo-banana: #fdda24;
+    --byo-bezel-outer-a: #93a493;
+    --byo-bezel-outer-b: #616f61;
+    --byo-bezel-inner-a: #6f7f6f;
+    --byo-bezel-inner-b: #839583;
+    --byo-bezel-shadow: rgba(0, 0, 0, 0.55);
+  }
+}
+:root[data-mantine-color-scheme="light"] {
+  --byo-surface: #ffffff;
+  --byo-banana: #f5a800;
+  --byo-bezel-outer-a: #a8baa8;
+  --byo-bezel-outer-b: #788a78;
+  --byo-bezel-inner-a: #8a9c8a;
+  --byo-bezel-inner-b: #9cb09c;
+  --byo-bezel-shadow: rgba(0, 0, 0, 0.25);
+}
+:root[data-mantine-color-scheme="dark"] {
+  --byo-surface: #1e1e23;
+  --byo-banana: #fdda24;
+  --byo-bezel-outer-a: #93a493;
+  --byo-bezel-outer-b: #616f61;
+  --byo-bezel-inner-a: #6f7f6f;
+  --byo-bezel-inner-b: #839583;
+  --byo-bezel-shadow: rgba(0, 0, 0, 0.55);
+}
+
+/* Own the page background + base text so the document is stable pre-paint and unaffected
+ * when Mantine's own `body` rule loads. `:root body` (0,1,1) outranks Mantine's `body`
+ * (0,0,1); the token resolves the correct tone for the active scheme. No `overflow` or
+ * `transform` anywhere on this chain — those would break the workbench's position:sticky
+ * toolbar and inspector. */
+:root body {
+  margin: 0;
+  background: var(--byo-page);
+  color: var(--byo-text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Screen-reader-only (visually hidden but in the a11y tree). Used for the standalone /app page's
+ * <h1> — the landing supplies its own heading in the hero. */
+.byo-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Header mirrors the app toolbar: a single 56px row, opaque page background + bottom border,
+ * the embossed banana brand lockup at the left and the theme toggle at the far right. */
+.byo-site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 56px;
+  /* border-box so the 1px border sits INSIDE the 56px, matching the app toolbar's total height
+   * (the landing has no global border-box reset like Mantine's). 16px gutters = the app's px="md"
+   * so the toggle sits at the same 16px right gutter as the app's ThemeToggle. */
+  box-sizing: border-box;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--byo-header-border);
+  background: var(--byo-page);
+}
+
+/* Brand lockup = app .brandMark + title block: banana in the embossed bezel, then the
+ * "BYOBanana" wordmark (Mantine sm gap, h4 18px size).
+ * margin-left reserves the app header's Burger + 32px gap footprint (16 gutter + 60 = x≈76) so
+ * the banana lands at the SAME x as the app header, which has a burger before its brand mark.
+ * Collapsed in the compact (<=992px) header where the anchor nav is dropped. */
+.byo-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+  min-width: 0;
+  margin-left: 60px;
+  color: var(--byo-text);
+  text-decoration: none;
+}
+.byo-brandmark {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 9px;
+  background: linear-gradient(
+    135deg,
+    var(--byo-bezel-outer-a) 0%,
+    var(--byo-bezel-outer-b) 100%
+  );
+  box-shadow:
+    inset 1px 1px 1px rgba(255, 255, 255, 0.45),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.3),
+    1px 1px 3px var(--byo-bezel-shadow);
+}
+.byo-bezel {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: linear-gradient(
+    135deg,
+    var(--byo-bezel-inner-a) 0%,
+    var(--byo-bezel-inner-b) 100%
+  );
+  box-shadow:
+    inset 1px 1px 2px rgba(0, 0, 0, 0.22),
+    inset -1px -1px 1px rgba(255, 255, 255, 0.3);
+}
+.byo-banana {
+  width: 18px;
+  height: 19.8px;
+  display: block;
+  filter: drop-shadow(0.5px 0.7px 0.6px rgba(0, 0, 0, 0.35));
+}
+.byo-brandtitle {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.byo-brandname {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Brand + specimen tag share the left of the header. The stack is a plain flex row; the brand keeps
+ * its own 60px burger-footprint reserve so the banana bezel still lands at x=76 (>=1024px). The tag
+ * is a quiet mono specimen label, held apart from the wordmark by a hairline divider so it never
+ * reads as part of the name. It hides once the header gets crowded (media query below). */
+.byo-brand-stack {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.byo-brand-tag {
+  padding-left: 14px;
+  border-left: 1px solid var(--byo-border);
+  font-family: var(--byo-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  color: var(--byo-muted);
+  white-space: nowrap;
+}
+
+.byo-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.byo-nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.byo-nav a {
+  color: var(--byo-muted);
+  text-decoration: none;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.byo-nav a:hover {
+  color: var(--byo-text);
+}
+
+/* "Open BYOBanana" reads as a filled Mantine button in the header (same anatomy as the app's
+ * filled controls: accent fill, contrast text, radius sm=8, fw600). Compound selector to outrank
+ * `.byo-nav a` on color. */
+.byo-nav a.byo-nav-cta {
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: var(--byo-accent);
+  color: var(--byo-accent-text);
+  font-weight: 600;
+}
+.byo-nav a.byo-nav-cta:hover {
+  color: var(--byo-accent-text);
+  background: color-mix(in srgb, var(--byo-accent) 90%, #000);
+}
+
+/* Light/dark toggle: the app's ThemeToggle ActionIcon (variant=default: 36px, 1px border,
+ * radius sm=8, surface fill, 18px currentColor sun/moon). The button reserves its box from first
+ * paint (no `hidden`) but starts `visibility: hidden` so JS-off users get an inert empty slot and
+ * nothing shifts; theme-toggle.js adds `is-ready` (visibility: visible) once wired. `visibility:
+ * hidden` already removes it from the tab order and blocks clicks, so it stays non-interactive
+ * until enhanced. Reserving the box means the nav to its left never jolts when the script lands. */
+.byo-theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  padding: 0;
+  border: 1px solid var(--byo-border);
+  border-radius: 8px;
+  background: var(--byo-surface);
+  color: var(--byo-text);
+  cursor: pointer;
+  visibility: hidden;
+}
+.byo-theme-toggle.is-ready {
+  visibility: visible;
+}
+.byo-theme-toggle:hover {
+  background: var(--byo-border);
+}
+.byo-theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+/* Show the sun in dark mode (tap to go light), the moon in light mode — matching the app's
+ * ThemeToggle. OS-media default plus the attribute override (attribute must win over media). */
+.byo-icon-sun {
+  display: none;
+}
+.byo-icon-moon {
+  display: block;
+}
+@media (prefers-color-scheme: dark) {
+  .byo-icon-sun {
+    display: block;
+  }
+  .byo-icon-moon {
+    display: none;
+  }
+}
+:root[data-mantine-color-scheme="light"] .byo-icon-sun {
+  display: none;
+}
+:root[data-mantine-color-scheme="light"] .byo-icon-moon {
+  display: block;
+}
+:root[data-mantine-color-scheme="dark"] .byo-icon-sun {
+  display: block;
+}
+:root[data-mantine-color-scheme="dark"] .byo-icon-moon {
+  display: none;
+}
+
+/* The reserved burger footprint (60px) + full lockup + four anchor links + CTA + toggle need
+ * ~1012px on one 56px row. Below 1024px drop the anchor links (same-page scroll targets,
+ * non-essential) AND collapse the burger footprint (left-anchor the brand like the app's own
+ * narrow header) so the compact header fits. Below 480px the app hides its whole title block on
+ * phones — do the same here (the banana bezel mark, the brand element the owner anchored on,
+ * stays) so the mark + CTA + toggle clear 360px. */
+/* The specimen tag only rides along on wide headers. The full brand lockup, anchor nav, CTA, toggle
+ * and tag need ~1367px on one 56px row, so below 1400px the tag drops first (well before the 1024px
+ * compact mode strips the anchor links) to keep the row from overflowing. */
+@media (max-width: 1399px) {
+  .byo-brand-tag {
+    display: none;
+  }
+}
+@media (max-width: 1023px) {
+  .byo-nav a:not(.byo-nav-cta) {
+    display: none;
+  }
+  .byo-brand {
+    margin-left: 0;
+  }
+}
+@media (max-width: 480px) {
+  .byo-brandtitle {
+    display: none;
+  }
+  .byo-nav a.byo-nav-cta {
+    padding: 7px 12px;
+  }
+  .byo-header-right {
+    gap: 12px;
+  }
+}
+
+.byo-main {
+  display: block;
+}
+
+.byo-hero {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: clamp(40px, 8vw, 96px) clamp(16px, 5vw, 48px);
+  text-align: center;
+}
+
+/* The hero slogan: the big visual headline, and the page's semantic <h1>. This class fully
+ * determines its rendered appearance (margin/size/weight all set here) so switching the element
+ * from <p> to <h1> stays pixel-identical against the UA h1 defaults. Held tight so each line sits
+ * on its own row; each line is a block so "Keep the best." (line 3) gets its own row for the circle. */
+.byo-slogan {
+  /* 21px (1.5x the old 14px): the drawn circle around "Keep the best." swings below the
+   * line box, so the lede needs the extra room to breathe. */
+  margin: 0 0 21px;
+  font-size: clamp(26px, 7.5vw, 60px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--byo-text);
+}
+.byo-slogan-line {
+  display: block;
+}
+
+.byo-lede {
+  margin: 0 auto 24px;
+  max-width: 640px;
+  font-size: clamp(16px, 2.4vw, 19px);
+  color: var(--byo-muted);
+}
+
+/* Primary CTA = a filled Mantine button (accent fill, contrast text, radius sm=8, fw600), sized
+ * up to the app's lg control anatomy for a hero action. */
+.byo-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 26px;
+  border-radius: 8px;
+  background: var(--byo-accent);
+  color: var(--byo-accent-text);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.byo-generator {
+  border-top: 1px solid var(--byo-border);
+}
+
+/* Workbench showcase: the clickable interface preview + primary CTA, held to the section measure. */
+.byo-showcase {
+  max-width: 66rem;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 5vw, 48px);
+  text-align: center;
+}
+.byo-showcase-figure {
+  margin: 0 0 24px;
+}
+.byo-showcase-figure video:focus-visible {
+  outline: 2px solid var(--byo-accent);
+  outline-offset: 3px;
+}
+
+.byo-section {
+  max-width: 66rem;
+  margin: 0 auto;
+  padding: clamp(32px, 6vw, 64px) clamp(16px, 5vw, 48px);
+  border-top: 1px solid var(--byo-border);
+}
+
+.byo-section h2 {
+  margin: 0 0 20px;
+  font-size: clamp(22px, 3.4vw, 30px);
+  font-weight: 700;
+}
+
+/* Prose held to a readable measure even though the section wrapper is wider (figures,
+ * step grids, and receipt manage their own widths). */
+.byo-section > p {
+  margin: 0 0 16px;
+  max-width: 46rem;
+  color: var(--byo-text);
+}
+
+.byo-list {
+  margin: 0 0 20px;
+  padding-left: 20px;
+  max-width: 46rem;
+}
+
+.byo-list li {
+  margin: 6px 0;
+}
+
+.byo-site-footer {
+  border-top: 1px solid var(--byo-border);
+  padding: 24px clamp(16px, 5vw, 48px);
+}
+
+.byo-site-footer p {
+  margin: 0 auto;
+  max-width: 66rem;
+  font-size: 13px;
+  color: var(--byo-muted);
+}
+.byo-footer-credit {
+  margin-top: 10px !important;
+}
+.byo-footer-credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* --- Hero accents ------------------------------------------------------------------ */
+
+/* Hand-drawn teal selection circle around the slogan's third line "Keep the best." (whimsy
+ * budget: one moment per screen, from the real product action). The phrase is real text; the SVG
+ * is decorative (aria-hidden). display:inline-block keeps the phrase as one unit so the loop never
+ * wraps mid-phrase. The overhang (left/width, top/height) is padded so the stroke clears every
+ * glyph of the large display type with comfortable room on all sides. */
+.byo-circle {
+  position: relative;
+  display: inline-block;
+}
+.byo-circle-mark {
+  position: absolute;
+  left: -10%;
+  top: -26%;
+  width: 120%;
+  height: 156%;
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke: var(--byo-accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Drawn (static) by default; the draw-on animation runs only when motion is welcome. */
+.byo-circle-mark path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .byo-circle-mark path {
+    animation: byo-draw 900ms ease-out both;
+  }
+  @keyframes byo-draw {
+    from {
+      stroke-dashoffset: 1000;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+}
+
+.byo-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px 24px;
+  margin: 0 auto 20px;
+}
+
+.byo-hero-note {
+  margin: 0 auto 8px;
+  max-width: 40rem;
+  font-size: 14px;
+  color: var(--byo-muted);
+}
+
+/* Teal in-copy links (secondary hero link + guide links). */
+.byo-link {
+  color: var(--byo-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+}
+.byo-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+.byo-cta:hover {
+  background: color-mix(in srgb, var(--byo-accent) 90%, #000);
+}
+
+/* --- Workbench section framing ------------------------------------------------------ */
+
+/* The h2 opens the showcase section; it gets the section wrapper width/padding. */
+.byo-generator-heading {
+  max-width: 66rem;
+  margin: 0 auto;
+  padding: clamp(32px, 6vw, 56px) clamp(16px, 5vw, 48px) 24px;
+  font-size: clamp(22px, 3.4vw, 30px);
+  font-weight: 700;
+}
+
+/* Privacy/spend note between the showcase heading and the screenshot. Lives INSIDE the
+ * .byo-showcase container (which supplies the shared 66rem + padding box), left-anchored
+ * at the section prose measure so its left edge sits on the same ruler as .byo-section > p
+ * below (a self-centered narrower box would start further right). text-align resets the
+ * container's centering. */
+.byo-showcase-subtext {
+  max-width: 46rem;
+  margin: 0 0 16px;
+  text-align: left;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--byo-text);
+}
+
+/* The showcase CTA now closes the section directly under the figure; give it the section's
+ * bottom rhythm so it never butts the screenshot or the next divider. The top margin is
+ * carried HERE, not on the figure: .byo-showcase-figure's bottom margin loses to the
+ * later-in-file base .byo-figure rule (equal specificity), so the figure lands with
+ * margin-bottom 0 and the CTA would otherwise sit flush against the card. */
+.byo-showcase-actions {
+  margin-top: 24px;
+  margin-bottom: clamp(32px, 6vw, 56px);
+}
+
+/* --- Comparison figure (the one honest interface screenshot) ------------------------ */
+
+.byo-figure {
+  margin: 32px 0 0;
+  padding: 12px;
+  border: 1px solid var(--byo-border);
+  border-radius: 12px;
+  background: var(--byo-surface);
+}
+.byo-figure img,
+.byo-figure video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--byo-border);
+}
+.byo-figure figcaption {
+  margin-top: 12px;
+  font-family: var(--byo-mono);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--byo-muted);
+}
+
+/* The square-to-circular icon proof sheds the .byo-figure card chrome: the chips already carry
+ * their own outlines, and a card around them read as a third nested frame (card, chip, circle).
+ * The chips sit directly on the page instead. */
+.byo-icon-figure {
+  border: 0;
+  background: none;
+  padding: 0;
+}
+
+/* Cassette triptych: three separate framed candidates in one row, each with its own
+ * hairline outline (inherited from .byo-figure img) and a short mono style subtitle. */
+.byo-triptych {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(8px, 2vw, 16px);
+}
+.byo-triptych-item {
+  text-align: center;
+}
+/* No global border-box reset here, so keep each framed image's 1px outline inside its
+ * grid track (width:100% + border would otherwise overrun the 1fr column by 2px). */
+.byo-triptych img {
+  box-sizing: border-box;
+}
+.byo-triptych-cap {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--byo-mono);
+  font-size: 12px;
+  color: var(--byo-muted);
+}
+
+/* --- Trust receipt (the no-account section) ----------------------------------------- */
+
+.byo-receipt {
+  max-width: 48rem;
+  padding: clamp(20px, 4vw, 32px);
+  border: 1px solid var(--byo-border);
+  border-radius: 12px;
+  background: var(--byo-surface);
+}
+/* Receipt header set in mono (creative-direction "compact trust receipt"): reads as printed
+ * receipt type rather than a page heading, while staying the section's h2 in the outline. */
+.byo-receipt h2 {
+  margin-top: 0;
+  font-family: var(--byo-mono);
+  font-size: clamp(19px, 2.6vw, 23px);
+  letter-spacing: -0.01em;
+}
+.byo-receipt p {
+  font-family: var(--byo-mono);
+  font-size: 13px;
+  max-width: none;
+}
+.byo-receipt-label {
+  font-family: var(--byo-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--byo-muted);
+  padding: 10px 0;
+  border-top: 1px dashed var(--byo-border);
+  border-bottom: 1px dashed var(--byo-border);
+}
+.byo-receipt .byo-list {
+  list-style: none;
+  padding-left: 0;
+  max-width: none;
+  font-family: var(--byo-mono);
+  font-size: 13px;
+}
+.byo-receipt .byo-list li {
+  position: relative;
+  padding-left: 22px;
+}
+/* Drawn teal tick, not a text glyph: Chromium exposes ::before text content to the a11y tree,
+ * so a "+" would be announced before each item. An empty box marker stays purely decorative. */
+.byo-receipt .byo-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--byo-accent);
+  border-radius: 2px;
+}
+
+/* --- How it works steps ------------------------------------------------------------- */
+
+.byo-steps {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 60rem;
+}
+.byo-step {
+  padding: 20px;
+  border: 1px solid var(--byo-border);
+  border-radius: 12px;
+  background: var(--byo-surface);
+}
+.byo-step h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 700;
+}
+.byo-step p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--byo-muted);
+}
+@media (max-width: 640px) {
+  .byo-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- FAQ ---------------------------------------------------------------------------- */
+
+.byo-faq {
+  max-width: 48rem;
+}
+.byo-faq h3 {
+  margin: 24px 0 6px;
+  font-size: 17px;
+  font-weight: 700;
+}
+.byo-faq h3:first-child {
+  margin-top: 0;
+}
+.byo-faq p {
+  margin: 0;
+  color: var(--byo-muted);
+}
+
+/* --- Final CTA ---------------------------------------------------------------------- */
+
+.byo-final {
+  text-align: center;
+}
+.byo-final > p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* --- Focus visibility (a11y) -------------------------------------------------------- */
+
+.byo-site-header a:focus-visible,
+.byo-main a:focus-visible,
+.byo-site-footer a:focus-visible {
+  outline: 2px solid var(--byo-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.byo-theme-toggle:focus-visible {
+  outline: 2px solid var(--byo-accent);
+  outline-offset: 3px;
+}
+
+/* --- Guide / article pages (Phase 19) ----------------------------------------------- */
+
+/* Long-form reading column held to a readable measure; tables and the data-flow figure
+ * manage their own overflow so the body never scrolls sideways at 360px. */
+.byo-article {
+  max-width: 70ch;
+  margin: 0 auto;
+  padding: clamp(24px, 5vw, 56px) clamp(16px, 5vw, 48px) clamp(48px, 8vw, 80px);
+}
+
+/* Breadcrumb in receipt (mono) vocabulary. "Guides" is plain text (no /guides/ page);
+ * separators are aria-hidden so a screen reader hears "Home, Guides, <title>", not slashes. */
+.byo-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 22px;
+  font-family: var(--byo-mono);
+  font-size: 12.5px;
+  color: var(--byo-muted);
+}
+.byo-breadcrumb a {
+  color: var(--byo-accent);
+  text-decoration: none;
+}
+.byo-breadcrumb a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.byo-breadcrumb [aria-current="page"] {
+  color: var(--byo-text);
+}
+.byo-breadcrumb .byo-crumb-sep {
+  color: var(--byo-border);
+}
+
+.byo-byline {
+  margin: 0 0 32px;
+  font-family: var(--byo-mono);
+  font-size: 13px;
+  color: var(--byo-muted);
+}
+
+.byo-article h1 {
+  margin: 0 0 16px;
+  font-size: clamp(28px, 4.5vw, 40px);
+  font-weight: 700;
+  line-height: 1.15;
+}
+.byo-article h2 {
+  margin: 40px 0 14px;
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 700;
+  line-height: 1.25;
+}
+.byo-article h3 {
+  margin: 28px 0 10px;
+  font-size: clamp(17px, 2.2vw, 20px);
+  font-weight: 700;
+}
+.byo-article p {
+  margin: 0 0 16px;
+}
+.byo-article ul,
+.byo-article ol {
+  margin: 0 0 18px;
+  padding-left: 22px;
+}
+.byo-article li {
+  margin: 6px 0;
+}
+.byo-article a {
+  color: var(--byo-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+}
+.byo-article a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Inline code and the example briefs share the mono/surface receipt look. */
+.byo-article code {
+  font-family: var(--byo-mono);
+  font-size: 0.9em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--byo-surface);
+  border: 1px solid var(--byo-border);
+}
+.byo-article blockquote {
+  margin: 0 0 18px;
+  padding: 4px 0 4px 18px;
+  border-left: 3px solid var(--byo-accent);
+  color: var(--byo-muted);
+  font-style: italic;
+}
+.byo-article blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Data-flow diagram: mono receipt panel. role="img" + aria-label carry the meaning to AT
+ * (raw ASCII arrows read poorly); tabindex makes the scroll container keyboard-reachable. */
+.byo-flow {
+  margin: 0 0 18px;
+}
+.byo-article pre {
+  margin: 0;
+  padding: 16px 18px;
+  font-family: var(--byo-mono);
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre;
+  overflow-x: auto;
+  border: 1px solid var(--byo-border);
+  border-radius: 12px;
+  background: var(--byo-surface);
+}
+.byo-article pre:focus-visible {
+  outline: 2px solid var(--byo-accent);
+  outline-offset: 3px;
+}
+
+/* Tables scroll inside their own container on narrow screens (min-width forces the scroll
+ * rather than crushing 4-column tables at 360px). */
+.byo-table-wrap {
+  margin: 0 0 20px;
+  overflow-x: auto;
+  border: 1px solid var(--byo-border);
+  border-radius: 12px;
+}
+/* The scroll container is focusable (tabindex in the markup) so keyboard users can reach the
+ * off-screen columns at 360px; give that focus a visible outline. */
+.byo-table-wrap:focus-visible {
+  outline: 2px solid var(--byo-accent);
+  outline-offset: 3px;
+}
+.byo-article table {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.byo-article th,
+.byo-article td {
+  padding: 10px 14px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--byo-border);
+}
+.byo-article th + th,
+.byo-article th + td,
+.byo-article td + td {
+  border-left: 1px solid var(--byo-border);
+}
+/* Column headers (thead) read as the mono receipt label; row headers (the first cell of each
+ * body row, marked th scope="row") stay body-weight so they don't look like column labels. */
+.byo-article thead th {
+  font-family: var(--byo-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--byo-muted);
+  background: var(--byo-surface);
+}
+.byo-article tbody th {
+  font-weight: 600;
+}
+.byo-article tbody tr:last-child th,
+.byo-article tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* --- Style / icon galleries (Phase 23, art-style guide) ------------------------------ */
+
+/* The gallery breaks out of the 70ch reading column to a wider measure so a subject can be
+ * scanned across five recipe columns, centered relative to the article. */
+.byo-gallery {
+  width: min(94vw, 1080px);
+  margin: 10px 0 14px;
+  margin-inline: calc((100% - min(94vw, 1080px)) / 2);
+}
+
+/* Desktop: a label column head spacer + five recipe column heads aligned over the strip. */
+.byo-gallery-head {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  gap: 10px;
+  padding: 0 4px 6px;
+}
+.byo-gallery-head-cells {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+.byo-gallery-colhead {
+  font-family: var(--byo-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--byo-text);
+  text-align: center;
+  line-height: 1.25;
+}
+
+/* One DOM row per subject: a subject label beside a 5-cell strip. The strip is the
+ * keyboard-focusable scroll region (matches the .byo-table-wrap pattern) so mobile users can
+ * reach off-screen columns; on desktop it is a plain aligned grid. */
+.byo-gallery-row {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+.byo-gallery-row + .byo-gallery-row {
+  margin-top: 8px;
+}
+.byo-gallery-rowlabel {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.byo-gallery-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  border-radius: 10px;
+}
+.byo-gallery-strip:focus-visible {
+  outline: 2px solid var(--byo-accent);
+  outline-offset: 3px;
+}
+
+/* Icon gallery: one row of five cells, no subject-label column, so the row and header must
+ * drop the 132px label track they inherit, or their single child collapses into it. The
+ * base .byo-gallery rules already supply the wide measure and five columns. */
+.byo-gallery-icons .byo-gallery-head,
+.byo-gallery-icons .byo-gallery-row {
+  grid-template-columns: 1fr;
+}
+
+/* A cell: specimen image + caption. The recipe name lives in the column head on desktop; the
+ * per-cell recipe span is revealed on mobile when the heads drop. */
+.byo-cell {
+  margin: 0;
+  border: 1px solid var(--byo-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--byo-surface);
+}
+.byo-cell img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-bottom: 1px solid var(--byo-border);
+}
+.byo-cell figcaption {
+  padding: 6px 8px 7px;
+  font-family: var(--byo-mono);
+  font-size: 10.5px;
+  line-height: 1.35;
+  color: var(--byo-muted);
+}
+.byo-cell-recipe {
+  display: none;
+  font-weight: 700;
+  color: var(--byo-text);
+}
+.byo-cell-fail {
+  color: #b91c1c;
+  font-weight: 700;
+}
+:root[data-mantine-color-scheme="dark"] .byo-cell-fail {
+  color: #fca5a5;
+}
+@media (prefers-color-scheme: dark) {
+  .byo-cell-fail {
+    color: #fca5a5;
+  }
+}
+:root[data-mantine-color-scheme="light"] .byo-cell-fail {
+  color: #b91c1c;
+}
+
+/* Mobile: each subject row stacks (label above), and the strip becomes a horizontal film-strip
+ * scroll. Column heads drop, so every cell shows its own recipe name. */
+@media (max-width: 760px) {
+  .byo-gallery,
+  .byo-gallery-icons {
+    width: 100%;
+    margin-inline: 0;
+  }
+  .byo-gallery-head {
+    display: none;
+  }
+  .byo-gallery-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    align-items: start;
+  }
+  .byo-gallery-strip,
+  .byo-gallery-icons .byo-gallery-strip {
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .byo-cell {
+    flex: 0 0 clamp(150px, 62vw, 220px);
+  }
+  .byo-cell-recipe {
+    display: block;
+  }
+}
+
+/* Gallery caption + detail pairs. */
+.byo-gallery-cap {
+  margin: 0 0 8px;
+  font-family: var(--byo-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--byo-muted);
+}
+.byo-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 8px 0;
+}
+.byo-detail-grid figure {
+  margin: 0;
+  padding: 10px;
+  border: 1px solid var(--byo-border);
+  border-radius: 12px;
+  background: var(--byo-surface);
+}
+.byo-detail-grid img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--byo-border);
+}
+.byo-detail-grid figcaption {
+  margin-top: 8px;
+  font-family: var(--byo-mono);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--byo-muted);
+}
+@media (max-width: 560px) {
+  .byo-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Homepage icon square-vs-circular proof: the raw square, then the exported circular PNG on a
+ * light chip and a dark chip. */
+.byo-icon-proof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-start;
+  margin-top: 8px;
+}
+.byo-icon-item {
+  text-align: center;
+}
+.byo-icon-chip {
+  display: grid;
+  place-items: center;
+  width: 156px;
+  height: 156px;
+  border-radius: 12px;
+  border: 1px solid var(--byo-border);
+}
+.byo-icon-chip img {
+  display: block;
+  border: 0;
+}
+.byo-icon-chip-square img {
+  width: 128px;
+  height: 128px;
+  border-radius: 8px;
+}
+.byo-icon-chip-round img {
+  width: 124px;
+  height: 124px;
+}
+.byo-icon-chip-light {
+  background: #ffffff;
+}
+.byo-icon-chip-dark {
+  background: #141418;
+}
+.byo-icon-cap {
+  margin-top: 6px;
+  font-family: var(--byo-mono);
+  font-size: 10.5px;
+  color: var(--byo-muted);
+}

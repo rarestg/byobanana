@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Same egress-limiting CSP as the landing (connect-src pins fetch/XHR to self + Google's
+      Gemini endpoint so a BYO key can't be POSTed elsewhere). frame-ancestors is delivered as a
+      real header via public/_headers (can't be set via <meta>).
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src 'self' https://generativelanguage.googleapis.com; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; base-uri 'none'; form-action 'none'; object-src 'none'"
+    />
+    <title>BYOBanana workbench</title>
+    <meta
+      name="description"
+      content="The BYOBanana workbench: generate and compare Nano Banana image variations with your own Google AI Studio key."
+    />
+    <!-- The application page is never a search-result landing target on ANY host; the
+         crawlable content lives on / and /guides/. No canonical (it is not a canonical URL). -->
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#f4f4f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141418" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Page background parity with the landing (owns :root body background pre-mount so there
+         is no flash before MantineProvider injects its vars). -->
+    <link rel="stylesheet" href="/landing.css" />
+
+    <!-- Sets data-mantine-color-scheme on <html> BEFORE first paint (no theme flash), reading
+         the same localStorage key the landing toggle + MantineProvider use. -->
+    <script src="/theme-init.js"></script>
+  </head>
+  <body>
+    <!-- <main> gives the standalone page the landmark the landing's <main> supplied when the
+         workbench was embedded. The visually-hidden <h1> is the page heading: the workbench
+         toolbar's wordmark is a <p> because the embedded copy assumed the landing owned the <h1>.
+         createRoot only replaces #root, so both survive mount; the sticky toolbar still sticks to
+         the viewport (main has no overflow/transform). -->
+    <main>
+      <h1 class="byo-sr-only">BYOBanana workbench</h1>
+      <div id="root"></div>
+    </main>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

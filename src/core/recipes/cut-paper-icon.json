@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "cut-paper-icon",
+  "version": 7,
+  "name": "Cut-paper icon",
+  "description": "Layered paper-craft icon: a few large flat shapes with crisp cut edges. No shadows, texture, or gradients.",
+  "kind": "project-icon",
+  "comparable": true,
+  "promptTemplate": "Create one icon.\n\nSubject brief:\n{{subject}}\n\nBackground:\nFirst create one continuous solid {{backgroundColor}} field covering the complete square image area, including every edge and all four corners. Then place the centered icon artwork directly on that uninterrupted field.\n\nColor palette:\nAvailable foreground palette: {{colorPalette}}. Draw the icon's foreground shapes from this palette unless the subject brief asks for different colors; you do not need to use every color. The background color is separate and does not count as a palette color.\n\nStyle contract:\nFlat cut-paper icon, not a scene. Build one dominant silhouette and at most two supporting forms from a few large, clean, overlapping cardstock shapes. Each form reads as one piece of smooth matte cardstock cut in a single confident pass, its edge so clean it looks machine-precise. Let overlaps feel deliberate and architectural, every layer placed with quiet precision, so the stack reads as one designed object, not scattered pieces. Use shallow layering and crisp cut edges to separate forms, and choose palette colors for maximum contrast between touching layers so every form separates at a glance. No realistic paper fibers, torn edges, lighting, cast shadows, gradients, gloss, bevels, photorealism, pseudo-text, labels, letters, logos, or busy decoration. Keep every critical part within the central 80 percent of the canvas. Use bold, simple forms without details that disappear at small display sizes.\n",
+  "preview": {
+    "type": "folio-icon",
+    "sizes": [
+      80,
+      96,
+      112
+    ],
+    "backgrounds": {
+      "light": "#FAFAFA",
+      "dark": "#18181B"
+    }
+  },
+  "export": {
+    "type": "folio-icon",
+    "transparentOutsideCircle": true
+  }
+}

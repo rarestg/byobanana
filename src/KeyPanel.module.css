@@ -1,0 +1,120 @@
+/* Key panel + header key pill styles (P8). */
+
+/* Validated model list: one parent grid so every row's friendly name and provider name
+   land in the SAME columns (banana bullet | friendly name | muted "Gemini …" name). */
+.modelGrid {
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  column-gap: var(--mantine-spacing-sm);
+  row-gap: 4px;
+  align-items: baseline;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--mantine-font-size-sm);
+}
+
+/* Each row contributes its three cells straight to the parent grid, so the columns align
+   across rows without subgrid. */
+.modelGrid li {
+  display: contents;
+}
+
+.modelBullet {
+  line-height: 1.2;
+}
+
+.modelDetail {
+  color: var(--mantine-color-dimmed);
+  font-size: var(--mantine-font-size-xs);
+  overflow-wrap: anywhere;
+}
+
+/* The always-visible real-money warning title. Mantine's yellow light-variant title color is
+   ~2.7:1 on the light scheme — swap in a deep amber (≈5.8:1 on the tinted bg). Dark rides
+   the P14 amber-wash tokens (yellow-2, same as the alert body) for a clean single amber. */
+.chargesTitle {
+  color: light-dark(#8a5a00, var(--mantine-color-yellow-2));
+}
+
+/* R15/P34: match the spend pill's capsule chrome (SpendPill.module.css .pill) so the two
+   header pills read as siblings — same 30px height, same 1px neutral outline
+   (light-dark gray-2/gray-7), the same 999px capsule, and the same accent-on-hover
+   border with the same 0.25s timing. Widths stay content-driven (owner: do NOT force
+   equal widths).
+
+   The light-variant tint (workbench / gray), the ✓/○ symbol, aria-label, the pillFlash
+   ring, and the below-48em collapse-to-symbol all stay intact. Chrome (height / radius /
+   border width / transition) rides a plain `.keyPill.mantine-Badge-root` selector so it
+   never depends on Mantine's internal markup — see the border-COLOR note below for the one
+   property that must fight Mantine's specificity. */
+.keyPill:global(.mantine-Badge-root) {
+  --acc: var(--mantine-primary-color-filled);
+  height: 30px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 999px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Border COLOR only. Mantine ships a dark-only light-variant rule
+   `:root[data-mantine-color-scheme=dark] .mantine-Badge-root[data-variant=light]` (a colored
+   `--badge-color` outline) at specificity (0,4,0); a plain `.keyPill.mantine-Badge-root`
+   override (0,3,0) loses to it in dark, leaving the pill on a teal border with no hover
+   shift. Repeating the module class lifts the authored selector to (0,4,0), and light-dark()
+   compiles its dark arm with an added `[data-mantine-color-scheme=dark]` prefix → (0,5,0),
+   which beats Mantine's (0,4,0) independent of stylesheet order. Only the color rides this
+   escalated selector, so a Mantine markup change can never silently disable the height/radius
+   chrome above. */
+.keyPill.keyPill.keyPill:global(.mantine-Badge-root) {
+  border-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-7));
+}
+
+.keyPill.keyPill.keyPill:global(.mantine-Badge-root):hover {
+  border-color: color-mix(in srgb, var(--acc) 45%, transparent);
+}
+
+/* Width-tight headers (P16, aligned with the spend pill's word/coin hide at the same sm
+   breakpoint): below 48em the key pill collapses to its state symbol (✓/○) — the full
+   label was ellipsizing into gibberish once the flap board grew. The button keeps its
+   accessible name via aria-label. */
+@media (max-width: 48em) {
+  .keyPill :global(.mantine-Badge-label) {
+    display: none;
+  }
+
+  .keyPill :global(.mantine-Badge-section) {
+    margin-right: 0;
+  }
+}
+
+/* Post-onboarding pill flash: a shimmer sweep + accent ring saying "key management lives
+   here now". Non-color-only (the ring + label change carry it too). */
+.pillFlash {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 0 2px var(--mantine-primary-color-filled);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pillFlash::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 20%,
+      color-mix(in srgb, var(--mantine-primary-color-filled) 45%, transparent) 50%,
+      transparent 80%
+    );
+    transform: translateX(-100%);
+    animation: pill-shimmer 700ms ease-out 2;
+    pointer-events: none;
+  }
+
+  @keyframes pill-shimmer {
+    to {
+      transform: translateX(100%);
+    }
+  }
+}

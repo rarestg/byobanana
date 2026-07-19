@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "hard-edge-geometric-screenprint",
+  "version": 2,
+  "name": "Hard-edge geometric screenprint",
+  "description": "Bold poster-style print: flat opaque shapes, crisp edges, and strong graphic composition.",
+  "kind": "artwork",
+  "comparable": true,
+  "promptTemplate": "This is your subject:\n{{subject}}\n\nDraw the subject in this style:\nReinterpret the subject as a precise hard-edge geometric screenprint or modernist graphic poster. Reduce the subject to its most essential silhouettes, structural relationships, and identifying features, then rebuild it from bold, flat, opaque shapes.\n\nUse crisp edges, clean intersections, strong cropping, modular geometry, and deliberate areas of negative space. Organize the composition through asymmetrical balance, repetition, scale, directional rhythm, and clear visual hierarchy. The subject should remain recognizable, but realism should be subordinated to shape, proportion, and graphic impact.\n\nApply the supplied palette as distinct spot colors with little or no tonal modeling. Create depth through overlap, scale, placement, and color adjacency rather than shading, atmospheric perspective, or realistic light. Do not add gradients unless they are explicitly requested. Use outlines only when they function as intentional structural shapes, not as automatic contours around every object.\n\nThe result should feel exact, economical, intelligent, and boldly designed—not playful clip art, generic vector illustration, or a collection of arbitrary polygons.\n\nAvoid brushstrokes, pastel texture, visible paper grain, soft atmospheric edges, delicate tonal transitions, naturalistic shadows, painterly modeling, distressed effects, or hand-drawn irregularity.\n\nUsing this color palette:\n{{colorPalette}}",
+  "preview": {
+    "type": "generic"
+  },
+  "export": {
+    "type": "raw-only"
+  }
+}

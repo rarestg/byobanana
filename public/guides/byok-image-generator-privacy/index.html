@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src 'self' https://generativelanguage.googleapis.com; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; base-uri 'none'; form-action 'none'; object-src 'none'"
+    />
+    <title>BYOK AI Image Generator Data Handling | BYOBanana</title>
+    <meta
+      name="description"
+      content="See where BYOBanana sends your Gemini API key, prompts, references, and generated images. Learn what stays in your browser and what Google processes."
+    />
+    <link rel="canonical" href="https://byobanana.com/guides/byok-image-generator-privacy/" />
+    <meta name="theme-color" content="#f4f4f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141418" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="BYOBanana" />
+    <meta property="og:title" content="BYOK AI Image Generator Data Handling | BYOBanana" />
+    <meta
+      property="og:description"
+      content="See where BYOBanana sends your Gemini API key, prompts, references, and generated images. Learn what stays in your browser and what Google processes."
+    />
+    <meta property="og:url" content="https://byobanana.com/guides/byok-image-generator-privacy/" />
+    <meta property="og:image" content="https://byobanana.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BYOK AI Image Generator Data Handling | BYOBanana" />
+    <meta
+      name="twitter:description"
+      content="See where BYOBanana sends your Gemini API key, prompts, references, and generated images. Learn what stays in your browser and what Google processes."
+    />
+    <meta name="twitter:image" content="https://byobanana.com/og.png" />
+
+    <script type="application/ld+json">
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": "Where your key, prompts, and AI images go",
+          "description": "See where BYOBanana sends your Gemini API key, prompts, references, and generated images. Learn what stays in your browser and what Google processes.",
+          "author": { "@type": "Person", "name": "Rareș T. Gosman" },
+          "datePublished": "2026-07-17",
+          "dateModified": "2026-07-17",
+          "mainEntityOfPage": "https://byobanana.com/guides/byok-image-generator-privacy/"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://byobanana.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Where your key, prompts, and AI images go",
+              "item": "https://byobanana.com/guides/byok-image-generator-privacy/"
+            }
+          ]
+        }
+      ]
+    </script>
+
+    <link rel="stylesheet" href="/landing.css" />
+    <script src="/theme-init.js"></script>
+  </head>
+  <body>
+    <header class="byo-site-header">
+      <div class="byo-brand-stack">
+        <a class="byo-brand" href="/" aria-label="BYOBanana home">
+          <span class="byo-brandmark" aria-hidden="true">
+            <span class="byo-bezel">
+              <img class="byo-banana" src="/favicon.svg" alt="" width="18" height="20" />
+            </span>
+          </span>
+          <span class="byo-brandtitle">
+            <span class="byo-brandname">BYOBanana</span>
+          </span>
+        </a>
+        <span class="byo-brand-tag">No credits. No subscription.</span>
+      </div>
+      <div class="byo-header-right">
+        <nav class="byo-nav" aria-label="Site">
+          <a href="/#how-it-works">How it works</a>
+          <a href="/#art-styles">Art styles</a>
+          <a href="/#image-variations">Image variations</a>
+          <a href="/#your-key-and-data">Your key and data</a>
+          <a class="byo-nav-cta" href="/app/"><span style="margin-right: 0.35em" aria-hidden="true">🍌</span>Open BYOBanana</a>
+        </nav>
+        <button type="button" class="byo-theme-toggle" aria-label="Switch color theme">
+          <svg
+            class="byo-icon-sun"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <circle cx="12" cy="12" r="4" />
+            <path
+              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+            />
+          </svg>
+          <svg
+            class="byo-icon-moon"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="byo-main">
+      <article class="byo-article">
+        <nav class="byo-breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span class="byo-crumb-sep" aria-hidden="true">/</span>
+          <span>Guides</span>
+          <span class="byo-crumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">Where your key, prompts, and AI images go</span>
+        </nav>
+
+        <h1>Where your key, prompts, and AI images go</h1>
+        <p class="byo-byline">By Rareș T. Gosman &middot; July 17, 2026</p>
+
+        <p>
+          BYOBanana is a bring-your-own-key, or BYOK, AI image generator. You use your own Google AI
+          Studio key, and the browser sends generation requests directly to Google's Gemini API.
+        </p>
+        <p>
+          That removes a BYOBanana account, credit system, and application backend from the request
+          path. It does not make image generation local, offline, or fully private. Google still
+          receives and processes the request.
+        </p>
+        <p>Facts on this page were last verified on <strong>July 16, 2026</strong>.</p>
+
+        <h2>The short answer</h2>
+        <ul>
+          <li>No BYOBanana account is required.</li>
+          <li>A Google account and Google AI Studio API key are required.</li>
+          <li>BYOBanana does not operate an API proxy for generation requests.</li>
+          <li>Your browser sends the key, prompt, reference images, and settings to Google.</li>
+          <li>Google returns generated images to your browser.</li>
+          <li>Session history, reference images, and generated images are stored in this browser's IndexedDB.</li>
+          <li>The key stays in memory unless you enable Remember.</li>
+          <li>Remember stores the key as plaintext in this browser's localStorage.</li>
+          <li>Google API charges and Google's data terms depend on the project and tier attached to your key.</li>
+        </ul>
+
+        <h2>BYOBanana data flow</h2>
+        <figure class="byo-flow">
+          <pre
+            role="img"
+            tabindex="0"
+            aria-label="Data flow: you, to BYOBanana running in your browser, which sends the key plus prompt plus references plus model settings to the Google Gemini API, which returns a generated image plus response metadata to BYOBanana running in your browser, then to browser storage and your downloaded files."
+          >You
+  |
+  v
+BYOBanana running in your browser
+  |
+  |  key + prompt + references + model settings
+  v
+Google Gemini API
+  |
+  |  generated image + response metadata
+  v
+BYOBanana running in your browser
+  |
+  v
+Browser storage and your downloaded files</pre>
+        </figure>
+        <p>
+          There is no BYOBanana application server between the browser and Google. Cloudflare serves
+          the static site files, while the generation request goes from the browser to Google's
+          Generative Language API.
+        </p>
+        <p>
+          This statement applies to prompts, reference images, generated images, and the API key.
+          Ordinary web hosting may still receive standard page-request information such as an IP
+          address and user agent. BYOBanana has no analytics or error-reporting scripts today. If that
+          ever changes, this page will say so.
+        </p>
+
+        <h2>What no account means</h2>
+        <p><code>AI image generator no account</code> can mean two different things:</p>
+        <ol>
+          <li>No account anywhere</li>
+          <li>No additional account for the generator</li>
+        </ol>
+        <p>
+          BYOBanana offers the second. You do not register with BYOBanana, but you need a Google
+          account and a compatible Google AI Studio API key.
+        </p>
+        <p>
+          BYOBanana removes another login and subscription, not Google's
+          authentication and billing requirements.
+        </p>
+
+        <h2>How the Google API key is handled</h2>
+
+        <h3>Validation</h3>
+        <p>
+          When you validate a key, the browser requests Google's model list. The key is sent to Google
+          in the <code>x-goog-api-key</code> request header, not placed in the URL.
+        </p>
+
+        <h3>Default storage</h3>
+        <p>
+          The key stays in browser memory for the current page session. Reloading or closing the page
+          clears an unremembered key.
+        </p>
+
+        <h3>Remember on this device</h3>
+        <p>
+          Remember is optional and off by default. If enabled, BYOBanana stores the key as plaintext
+          in localStorage on this browser profile.
+        </p>
+        <p>
+          Plaintext localStorage is convenient, not a secure secret vault. Any JavaScript that runs on
+          the same origin could potentially read it. Do not remember a key on a shared or untrusted
+          device.
+        </p>
+
+        <h3>Content Security Policy</h3>
+        <p>
+          BYOBanana uses a Content Security Policy that limits browser fetch connections to the site
+          itself and Google's Generative Language API. This reduces the available exfiltration surface.
+          It is defense in depth, not a guarantee. Compromised same-origin code could still misuse a
+          key or leak it through channels that CSP does not block.
+        </p>
+
+        <h2>What is stored in the browser</h2>
+        <p>
+          BYOBanana stores session data in IndexedDB so runs can survive a reload and appear in
+          history.
+        </p>
+        <p>That local data includes:</p>
+        <ul>
+          <li>Subject briefs and rendered prompts</li>
+          <li>Model and generation settings</li>
+          <li>Selected recipes and palettes</li>
+          <li>Uploaded reference images</li>
+          <li>Generated images</li>
+          <li>Which candidate you marked as primary, and each candidate's status</li>
+          <li>Export records and file hashes</li>
+        </ul>
+        <p>
+          IndexedDB belongs to the browser profile on that device. Other people using the same
+          unlocked profile may be able to open the site and see its stored history.
+        </p>
+        <p>
+          Use Clear history when you no longer need the runs. Also clear site data through the browser
+          if the device is shared or being transferred.
+        </p>
+
+        <h2>What Google processes</h2>
+        <p>Google receives the content required for the API request. Depending on the run, that can include:</p>
+        <ul>
+          <li>API key</li>
+          <li>Prompt and system instructions</li>
+          <li>Reference images</li>
+          <li>Model, size, aspect ratio, and other settings</li>
+          <li>Search requests, when the search setting is turned on</li>
+        </ul>
+        <p>
+          Google returns generated content and usage metadata. BYOBanana cannot make that processing
+          local because the selected image model runs on Google's servers.
+        </p>
+
+        <h2>Does Google use prompts and images to improve its products?</h2>
+        <p>It depends on the Google service tier attached to your key and, in some cases, your region.</p>
+        <p>Google's terms stated on July 16, 2026:</p>
+        <ul>
+          <li>For unpaid services, Google may use submitted content and generated responses to provide, improve, and develop products. Human reviewers may process inputs and outputs. Google tells users not to submit sensitive, confidential, or personal information to unpaid services.</li>
+          <li>For paid services, Google states that prompts and responses are not used to improve its products. Separate limited retention and abuse-monitoring conditions can still apply.</li>
+        </ul>
+        <p>
+          BYOBanana does not choose your Google tier. Review the
+          <a href="https://ai.google.dev/gemini-api/terms">current Gemini API terms</a> and
+          <a href="https://ai.google.dev/gemini-api/docs/zdr">zero data retention documentation</a> for
+          your project before uploading sensitive material.
+        </p>
+        <p>
+          Do not interpret <code>paid</code> as a permanent privacy guarantee. Terms and product
+          behavior can change.
+        </p>
+
+        <h2>Is BYOBanana a private AI image generator?</h2>
+        <p>
+          Calling it private would promise too much. BYOBanana is a BYOK interface: requests go
+          straight from your browser to Google, with no BYOBanana server in between.
+        </p>
+        <p>Privacy advantages:</p>
+        <ul>
+          <li>No BYOBanana account database</li>
+          <li>No BYOBanana application backend or generation proxy</li>
+          <li>No BYOBanana image-credit ledger</li>
+          <li>Local browser session history</li>
+          <li>Remembering the key is optional</li>
+        </ul>
+        <p>Limits:</p>
+        <ul>
+          <li>Google receives and processes generation requests</li>
+          <li>The key is present in the browser and sent to Google</li>
+          <li>Remembered keys are plaintext in localStorage</li>
+          <li>Local history remains available to the browser profile until cleared</li>
+          <li>Cloudflare serves the site and receives ordinary web requests</li>
+          <li>Third-party scripts would change the data surface if added later</li>
+        </ul>
+        <p>
+          <code>Browser-based</code> does not mean <code>local AI</code>.
+          <code>No BYOBanana account</code> does not mean <code>no Google account</code>.
+          <code>BYOK</code> does not mean <code>zero data retention</code>.
+        </p>
+
+        <h2>API costs and billing</h2>
+        <p>
+          BYOBanana does not sell credits. Google bills supported image generation through the project
+          attached to your key.
+        </p>
+        <p>
+          BYOBanana estimates the run's cost before generation, based on the chosen model, size, number
+          of recipes, and variants. The estimate can age as Google changes prices.
+        </p>
+        <p>
+          Check
+          <a href="https://ai.google.dev/gemini-api/docs/pricing">Google's current Gemini API pricing</a>
+          before a large run. Set billing alerts and quota limits in your own Google project.
+        </p>
+
+        <h2>Key-security guidance</h2>
+        <p>
+          Google advises developers not to hardcode operator-owned API keys in client-side production
+          applications and recommends a backend proxy for those keys.
+        </p>
+        <p>
+          BYOBanana does not embed a site operator's key at all. You supply your own key and send it
+          from your own browser. That avoids
+          exposing one shared operator key, but it does not remove browser risk.
+        </p>
+        <p>Practical precautions:</p>
+        <ul>
+          <li>Use a dedicated Google project and key for image generation.</li>
+          <li>Apply the restrictions Google currently supports.</li>
+          <li>Set quotas and billing alerts.</li>
+          <li>Leave Remember off on shared devices.</li>
+          <li>Clear the key when finished.</li>
+          <li>Revoke or rotate a key if you suspect exposure.</li>
+          <li>Do not paste keys into screenshots, support messages, or prompts.</li>
+        </ul>
+        <p>
+          See <a href="https://ai.google.dev/gemini-api/docs/api-key">Google's current API key guidance</a>.
+        </p>
+
+        <h2>Google eligibility and regional terms</h2>
+        <p>
+          Google's Gemini API terms stated on July 16, 2026 that API users must be at least 18 and that
+          the services are for professional or business purposes. The terms also place paid-service
+          requirements on API clients made available in the European Economic Area, Switzerland, and
+          the United Kingdom.
+        </p>
+        <p>
+          Review the current terms for your location and use case. BYOBanana cannot determine
+          eligibility for you.
+        </p>
+
+        <h2>Before using sensitive material</h2>
+        <p>Ask these questions:</p>
+        <ol>
+          <li>Is my Google project on the intended free or paid tier?</li>
+          <li>Have I read the current Google data-use terms for that tier and region?</li>
+          <li>Does the prompt or reference contain personal, confidential, regulated, or client-owned material?</li>
+          <li>Am I comfortable storing this run in this browser profile?</li>
+          <li>Is Remember off if the device is shared?</li>
+          <li>Are quotas and billing alerts configured?</li>
+        </ol>
+        <p>If the answer is uncertain, do not upload the material yet.</p>
+
+        <h2>Frequently asked questions</h2>
+        <h3>Does BYOBanana send my API key to its own server?</h3>
+        <p>
+          No BYOBanana application server or API proxy receives generation requests. The browser sends
+          the key directly to Google's API. The static hosting provider still serves the page and may
+          receive standard web-request information.
+        </p>
+        <h3>Do I need a BYOBanana account?</h3>
+        <p>
+          No. You need a Google account and Google AI Studio key, but there is no separate BYOBanana
+          registration.
+        </p>
+        <h3>Is the key encrypted in browser storage?</h3>
+        <p>
+          No. The key remains in memory by default. If Remember is enabled, it is stored as plaintext
+          in localStorage.
+        </p>
+        <h3>Are my prompts and images stored locally?</h3>
+        <p>
+          BYOBanana stores your prompts and settings, reference images, and generated images in browser
+          IndexedDB. Google also receives the prompt and input content required to perform generation.
+        </p>
+        <h3>Can Google use my content to improve its products?</h3>
+        <p>
+          Google's stated treatment differs between unpaid and paid services. Review the current Gemini
+          API terms for the tier attached to your key. BYOBanana does not control that tier or Google's
+          policies.
+        </p>
+        <h3>Is image generation free?</h3>
+        <p>
+          BYOBanana has no subscription or credit charge. Google's supported image models may require
+          paid API usage. Check the estimate in BYOBanana and Google's current pricing.
+        </p>
+        <h3>Does BYOBanana work offline?</h3>
+        <p>
+          No. The interface runs in the browser, but image generation requires a network request to
+          Google's Gemini API.
+        </p>
+
+        <h2>Now you know where everything goes</h2>
+        <p>Review the cost estimate and data flow, then decide whether the run fits your project.</p>
+        <p>
+          <strong><a href="/app/">Open BYOBanana</a></strong>
+        </p>
+        <p>Google AI Studio key required. Google API charges apply.</p>
+      </article>
+    </main>
+
+    <footer class="byo-site-footer">
+      <p>
+        BYOBanana is an independent product and is not affiliated with or endorsed by Google. Google,
+        Gemini, Google AI Studio, and Nano Banana are referenced only to identify compatible services
+        and models.
+      </p>
+    </footer>
+
+    <script src="/theme-toggle.js"></script>
+  </body>
+</html>

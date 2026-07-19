@@ -1,0 +1,181 @@
+/* Inspector detail panel. Ported from nano-banana-2 web/styles.css (.identity-path,
+   .inspector-image/.inspector-placeholder, .native-* small-size previews), remapped onto
+   Mantine CSS variables. The sticky column + max-height live in SessionView.module.css. */
+
+.identityPath {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px var(--mantine-spacing-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 700;
+}
+
+.identityPath li {
+  overflow-wrap: anywhere;
+}
+
+/* Separators lead each entry (P16: they used to trail — but a trailing "›" inside the
+   clamped subject would be cut off with the overflow; a leading one always renders). */
+.identityPath li + li::before {
+  content: "›";
+  margin-right: var(--mantine-spacing-xs);
+  color: var(--mantine-color-dimmed);
+  font-weight: 400;
+}
+
+.identityPath li:last-child {
+  color: var(--mantine-primary-color-filled);
+}
+
+/* P16: a run-on subject prompt must not stretch the sticky inspector column to arm's
+   length — clamp at 3 lines. Nothing is lost: the full subject stays readable in the
+   expanded session view, in the title tooltip here, and in the DOM text itself (AT
+   reads the complete node; only overflow PAINTING is cut). */
+.subject {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Large preview: succeeded image or a terminal/queued placeholder, both 1:1. */
+.preview,
+.placeholder {
+  width: 100%;
+  aspect-ratio: 1;
+  display: block;
+  border-radius: var(--mantine-radius-sm);
+  object-fit: contain;
+}
+
+/* Neutral backdrop behind the generated image — theme-aware so a dark session doesn't
+   flash a bright box, and transparent-corner icons read on a matching tone. */
+.preview {
+  background-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+.placeholder {
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  padding: var(--mantine-spacing-sm);
+  text-align: center;
+  background: var(--mantine-color-default-hover);
+  color: var(--mantine-color-dimmed);
+  font-size: var(--mantine-font-size-sm);
+}
+
+.placeholderFailed {
+  /* P15: scheme-aware danger text (light red-7 / dark red-3 — see app.css). */
+  color: var(--mantine-color-red-light-color);
+}
+
+.placeholderIcon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+/* Icon "Small-size previews": each size on a light AND a dark cell so the icon is judged
+   on both themes (source .native-row / .native-cell). */
+.nativeDetails {
+  font-size: var(--mantine-font-size-xs);
+}
+
+.nativeDetails summary {
+  cursor: pointer;
+}
+
+.nativePreview {
+  margin-top: var(--mantine-spacing-xs);
+  display: grid;
+  gap: var(--mantine-spacing-xs);
+}
+
+.nativeRow {
+  display: grid;
+  grid-template-columns: 40px 1fr 1fr;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+  color: var(--mantine-color-dimmed);
+  font-size: var(--mantine-font-size-xs);
+}
+
+.nativeCell {
+  min-width: 0;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.nativeCellLight {
+  background: #fafafa;
+}
+
+.nativeCellDark {
+  background: #18181b;
+}
+
+.nativeCell img {
+  display: block;
+  max-width: 100%;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Google Search grounding attribution. The widget is Google-supplied HTML; constrain it so a
+   long suggestion row scrolls inside its own box rather than widening the sticky inspector.
+   P14: same slim-scrollbar treatment as the inspector/prompt scrollers. */
+.groundingWidget {
+  overflow-x: auto;
+  max-width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3)) transparent;
+}
+
+.groundingWidget::-webkit-scrollbar {
+  height: 8px;
+}
+
+.groundingWidget::-webkit-scrollbar-thumb {
+  background: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3));
+  border-radius: 4px;
+}
+
+.groundingWidget::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.groundingChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--mantine-color-default-border);
+  background: var(--mantine-color-default);
+  overflow-wrap: anywhere;
+}
+
+.groundingChip:hover {
+  border-color: var(--mantine-primary-color-filled);
+}
+
+/* Hover-zoom magnifier panel (P8): fixed-position (portaled to <body> so the sticky,
+   overflow-scrolled inspector column can't clip it), floating left of the inspector. No
+   animation — it exists only while the cursor is over the preview image. */
+.zoomPanel {
+  position: fixed;
+  z-index: 300;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  background-repeat: no-repeat;
+  box-shadow: var(--mantine-shadow-md);
+  pointer-events: none;
+}

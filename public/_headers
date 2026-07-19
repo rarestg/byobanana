@@ -1,0 +1,20 @@
+# Cloudflare static-asset headers (https://developers.cloudflare.com/workers/static-assets/headers/)
+# connect-src narrows the fetch/XHR/beacon surface to 'self' + Google's Gemini
+# endpoint, so a browser-held (BYO) key cannot be POSTed to another host. This is
+# defense-in-depth, NOT a complete egress lock: CSP does not restrict top-level
+# navigation, so compromised same-origin JS could still leak via a location change.
+# A matching <meta> CSP in index.html covers non-Cloudflare previews; frame-ancestors
+# can only be delivered as a real header, so it lives here. 'wasm-unsafe-eval' lets the
+# compression worker compile its codecs (the worker script's own response CSP governs it);
+# the narrow token does not enable JS eval.
+/*
+  Content-Security-Policy: default-src 'self'; connect-src 'self' https://generativelanguage.googleapis.com; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Cross-Origin-Opener-Policy: same-origin
+
+# Vite content-hashed filenames are immutable, so cache them hard. index.html is
+# not under /assets/, so it keeps Cloudflare's default revalidate-always and
+# deploys take effect immediately.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

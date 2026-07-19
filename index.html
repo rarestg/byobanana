@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Travels with the HTML on ANY host (not just Cloudflare): connect-src limits
+      fetch/XHR to itself and Google's Gemini endpoint, so a BYO key can't be POSTed
+      elsewhere. Defense-in-depth, not a full egress lock (CSP does not govern top-level
+      navigation). frame-ancestors can't be set via <meta>, so it lives in public/_headers
+      (applied by Cloudflare).
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src 'self' https://generativelanguage.googleapis.com; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; base-uri 'none'; form-action 'none'; object-src 'none'"
+    />
+    <title>Nano Banana Image Generator With Your Own Key | BYOBanana</title>
+    <meta
+      name="description"
+      content="Generate and compare Nano Banana image variations across art styles and color palettes. Use your Google key. No BYOBanana account. API charges apply."
+    />
+    <link rel="canonical" href="https://byobanana.com/" />
+    <meta name="theme-color" content="#f4f4f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141418" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph + Twitter. Absolute URLs (social scrapers don't resolve relative paths);
+         the 1200x630 card is built from scripts/og-card.html by scripts/build-og.mjs. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="BYOBanana" />
+    <meta
+      property="og:title"
+      content="Nano Banana Image Generator With Your Own Key | BYOBanana"
+    />
+    <meta
+      property="og:description"
+      content="Generate and compare Nano Banana image variations across art styles and color palettes. Use your Google key. No BYOBanana account. API charges apply."
+    />
+    <meta property="og:url" content="https://byobanana.com/" />
+    <meta property="og:image" content="https://byobanana.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Nano Banana Image Generator With Your Own Key | BYOBanana"
+    />
+    <meta
+      name="twitter:description"
+      content="Generate and compare Nano Banana image variations across art styles and color palettes. Use your Google key. No BYOBanana account. API charges apply."
+    />
+    <meta name="twitter:image" content="https://byobanana.com/og.png" />
+
+    <!-- Structured data. A JSON-LD block is inert data (not an executable script), so the strict
+         script-src 'self' CSP does not apply to it. WebSite + WebApplication only, per the brief:
+         no Offer/AggregateRating/FAQPage. isAccessibleForFree reflects that BYOBanana itself is
+         free while the description states Google API charges apply. -->
+    <script type="application/ld+json">
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://byobanana.com/#website",
+          "name": "BYOBanana",
+          "url": "https://byobanana.com/",
+          "description": "Generate and compare Nano Banana image variations across art styles and color palettes. Use your Google key. No BYOBanana account. API charges apply."
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "@id": "https://byobanana.com/#app",
+          "name": "BYOBanana",
+          "url": "https://byobanana.com/",
+          "applicationCategory": "DesignApplication",
+          "operatingSystem": "Any",
+          "isAccessibleForFree": true,
+          "isPartOf": { "@id": "https://byobanana.com/#website" },
+          "description": "Browser-based Nano Banana workbench. Generate several image directions with your own Google AI Studio key, compare them in a contact sheet, and export the keepers. No BYOBanana account or subscription. Google API charges apply."
+        }
+      ]
+    </script>
+
+    <!-- Static landing skeleton styles. Render-blocking, self-contained (no Mantine
+         runtime theme vars, which swap after mount and would flash), keyed off the
+         data-mantine-color-scheme attribute set pre-paint by theme-init.js. Loaded
+         before the module bundle so the landing document paints correctly with JS off. -->
+    <link rel="stylesheet" href="/landing.css" />
+
+    <!-- Sets data-mantine-color-scheme on <html> BEFORE first paint (no theme flash).
+         External same-origin script because our strict CSP (script-src 'self') blocks
+         Mantine's inline ColorSchemeScript. Blocking classic script by design. -->
+    <script src="/theme-init.js"></script>
+  </head>
+  <body>
+    <!-- Static, crawlable landing document. The React workbench is a standalone document at /app;
+         this page is server-independent HTML so it has real content (and its sole h1 heading)
+         before, and without, JavaScript. Copy originates in the SEO package (pages/home.md), with
+         a later editorial copy pass applied here as the site's copy of record. -->
+    <!-- Site header, mirroring the app toolbar's design language (src/Workbench.tsx +
+         Workbench.module.css): the banana mark in an embossed bezel at the left, then the
+         "BYOBanana" wordmark lockup, and a light/dark toggle at the far
+         right styled like the app's ThemeToggle. The toggle is progressive enhancement: it
+         ships `hidden` and public/theme-toggle.js unhides + wires it (CSP script-src 'self'). -->
+    <header class="byo-site-header">
+      <div class="byo-brand-stack">
+        <a class="byo-brand" href="/" aria-label="BYOBanana home">
+          <span class="byo-brandmark" aria-hidden="true">
+            <span class="byo-bezel">
+              <img class="byo-banana" src="/favicon.svg" alt="" width="18" height="20" />
+            </span>
+          </span>
+          <span class="byo-brandtitle">
+            <span class="byo-brandname">BYOBanana</span>
+          </span>
+        </a>
+        <span class="byo-brand-tag">No credits. No subscription.</span>
+      </div>
+      <div class="byo-header-right">
+        <nav class="byo-nav" aria-label="Site">
+          <a href="#how-it-works">How it works</a>
+          <a href="#art-styles">Art styles</a>
+          <a href="#image-variations">Image variations</a>
+          <a href="#your-key-and-data">Your key and data</a>
+          <a class="byo-nav-cta" href="/app/"><span style="margin-right: 0.35em" aria-hidden="true">🍌</span>Open BYOBanana</a>
+        </nav>
+        <button type="button" class="byo-theme-toggle" aria-label="Switch color theme">
+          <svg
+            class="byo-icon-sun"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <circle cx="12" cy="12" r="4" />
+            <path
+              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+            />
+          </svg>
+          <svg
+            class="byo-icon-moon"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="byo-main">
+      <section class="byo-hero">
+        <h1 class="byo-slogan">
+          <span class="byo-slogan-line">Bring your own key.</span>
+          <span class="byo-slogan-line">Generate a bunch.</span>
+          <span class="byo-slogan-line"
+            ><span class="byo-circle"
+              >Keep the best.<svg
+                class="byo-circle-mark"
+                viewBox="0 0 340 74"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="M32,54 C12,44 10,20 46,12 C104,2 214,3 292,13 C328,18 336,34 318,48 C296,64 118,70 46,60 C20,56 14,48 34,42"
+                /></svg></span
+          ></span>
+        </h1>
+        <p class="byo-lede">
+          BYOBanana is a Nano Banana image generator that runs in your browser. Make images in
+          different styles, compare them side by side, and keep the ones you like.
+        </p>
+        <p class="byo-hero-actions">
+          <a class="byo-cta" href="/app/"><span style="margin-right: 0.35em" aria-hidden="true">🍌</span>Open BYOBanana</a>
+          <a class="byo-link" href="/guides/byok-image-generator-privacy/"
+            ><span style="display: inline-block; margin-right: 0.35em" aria-hidden="true"
+              >🔑</span
+            >We never see your key</a
+          >
+        </p>
+        <p class="byo-hero-note">
+          We don't do accounts or subscriptions. Just use your Google AI Studio key. Google API
+          rates apply.
+        </p>
+      </section>
+
+      <!-- Workbench showcase. The React app is no longer embedded here; it is a standalone
+           document at /app. This section shows a REAL keyed session (a genuine screen recording,
+           not a mock preview) as a muted demo video, plus a primary CTA. The markup ships WITHOUT
+           `autoplay`: /hero-video.js starts playback only when the visitor has not asked for
+           reduced motion, so no-JS and reduced-motion visitors get the poster + native controls
+           (the controls are also the WCAG 2.2.2 pause mechanism) and never fetch the video. -->
+      <section id="generator" class="byo-generator" aria-labelledby="byo-generator-heading">
+        <h2 id="byo-generator-heading" class="byo-generator-heading">
+          Bring your own key. Pick your best image. See what you spent.
+        </h2>
+        <div class="byo-showcase">
+          <p class="byo-showcase-subtext">
+            BYOBanana has no servers. Everything runs in your browser, so we can't see what you
+            make or what you spend. Google bills your key and reports the usage. BYOBanana just
+            shows you the number.
+          </p>
+          <figure class="byo-figure byo-showcase-figure">
+            <video
+              src="/img/byobanana-hero.mp4"
+              poster="/img/byobanana-hero-poster.jpg"
+              width="1920"
+              height="1086"
+              controls
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              aria-label="Screen recording of a BYOBanana session: paste a key, pick styles, generate variants side by side, and export the keeper."
+            ></video>
+          </figure>
+        </div>
+        <p class="byo-hero-actions byo-showcase-actions">
+          <a class="byo-cta" href="/app/"><span style="margin-right: 0.35em" aria-hidden="true">🍌</span>Open BYOBanana</a>
+        </p>
+      </section>
+
+      <section id="image-variations" class="byo-section">
+        <h2>A bunch of options. One clear winner.</h2>
+        <p>
+          Chat windows are great at making one image at a time. BYOBanana makes a bunch at once, in
+          different styles, and helps you pick the one you like.
+        </p>
+        <p>
+          Run one subject through up to three art style recipes. Generate one to eight variants per
+          recipe. The results arrive in a contact sheet where the prompt, palette, and settings stay
+          visible while you compare candidates.
+        </p>
+        <ul class="byo-list">
+          <li>Compare every candidate in one grid.</li>
+          <li>Inspect an image without losing the batch.</li>
+          <li>Download one image on its own, or a ZIP with all your keepers.</li>
+        </ul>
+        <p>
+          <a class="byo-link" href="/guides/ai-image-variations/"
+            >Learn how to generate useful image variations</a
+          >
+        </p>
+      </section>
+
+      <section id="art-styles" class="byo-section">
+        <h2>Hold the art direction steady</h2>
+        <p>
+          Recipes are repeatable prompt bundles: pastel illustration, hard-edge screenprint, pixel
+          art, oil realism, ornamental miniature art, and project icons. Pick up to three for one
+          subject and apply one of seven fixed color palettes across the run. Recipes guide the
+          prompt so the look stays consistent, but they are not trained style models, so results
+          will still vary.
+        </p>
+        <ul class="byo-list">
+          <li>Compare several styles against the same subject.</li>
+          <li>Keep the palette fixed while composition changes.</li>
+          <li>Add reference images when text alone is not enough.</li>
+          <li>Use Custom mode when you want full prompt control.</li>
+        </ul>
+        <p>
+          <a class="byo-link" href="/guides/art-style-recipes-and-palettes/"
+            >Explore the art style recipes and palettes</a
+          >
+        </p>
+        <figure class="byo-figure">
+          <div class="byo-triptych">
+            <div class="byo-triptych-item">
+              <img
+                src="/img/nano-banana-cassette-airy-pastel.webp"
+                width="360"
+                height="360"
+                loading="lazy"
+                decoding="async"
+                alt="The SUMMER MIX cassette rendered in the Airy pastel modernist style, Sunlit coral palette."
+              />
+              <span class="byo-triptych-cap">Airy pastel</span>
+            </div>
+            <div class="byo-triptych-item">
+              <img
+                src="/img/nano-banana-cassette-ornamental.webp"
+                width="360"
+                height="360"
+                loading="lazy"
+                decoding="async"
+                alt="The same SUMMER MIX cassette rendered in the Ornamental miniature maximalism style, Sunlit coral palette."
+              />
+              <span class="byo-triptych-cap">Ornamental miniature</span>
+            </div>
+            <div class="byo-triptych-item">
+              <img
+                src="/img/nano-banana-cassette-oil-realism.webp"
+                width="360"
+                height="360"
+                loading="lazy"
+                decoding="async"
+                alt="The same SUMMER MIX cassette rendered in the Tenebrist oil realism style, Sunlit coral palette."
+              />
+              <span class="byo-triptych-cap">Tenebrist oil</span>
+            </div>
+          </div>
+        </figure>
+      </section>
+
+      <section class="byo-section">
+        <h2>Images and round project icons</h2>
+        <p>
+          Choose a standard image for editorial art, presentations, concepts, backgrounds, or site
+          assets. Choose the project-icon family when you need a compact square composition that
+          survives a circular crop.
+        </p>
+        <p>
+          For project icons, BYOBanana can turn a square generated image into a circular PNG with
+          transparent corners, exported at 512 by 512, 256 by 256, or the source's full
+          resolution. The source image is clipped to a full-bleed circle.
+        </p>
+        <p>
+          This is raster icon output. It is not an editable SVG, vector logo, brand kit, or
+          trademark review.
+        </p>
+        <figure class="byo-figure byo-icon-figure">
+          <div class="byo-icon-proof">
+            <div class="byo-icon-item">
+              <div class="byo-icon-chip byo-icon-chip-square byo-icon-chip-light">
+                <img
+                  src="/img/nano-banana-icon-cutpaper-square.webp"
+                  width="128"
+                  height="128"
+                  loading="lazy"
+                  decoding="async"
+                  alt="The raw square cut-paper database-migration icon as generated by Nano Banana 2 Lite: two layered cut-paper database cylinders, cream in front and gray-and-black banded behind, with a bold coral arrow sweeping from the front cylinder into the rear one and a small amber tag between them."
+                />
+              </div>
+              <p class="byo-icon-cap">Raw square</p>
+            </div>
+            <div class="byo-icon-item">
+              <div class="byo-icon-chip byo-icon-chip-round byo-icon-chip-light">
+                <img
+                  src="/img/nano-banana-icon-cutpaper-circular.png"
+                  width="124"
+                  height="124"
+                  loading="lazy"
+                  decoding="async"
+                  alt="The same icon exported as a circular PNG, shown on a light background."
+                />
+              </div>
+              <p class="byo-icon-cap">Circular &middot; light</p>
+            </div>
+            <div class="byo-icon-item">
+              <div class="byo-icon-chip byo-icon-chip-round byo-icon-chip-dark">
+                <img
+                  src="/img/nano-banana-icon-cutpaper-circular.png"
+                  width="124"
+                  height="124"
+                  loading="lazy"
+                  decoding="async"
+                  alt="The same circular icon on a dark background, where the transparent corners let the dark show through."
+                />
+              </div>
+              <p class="byo-icon-cap">Circular &middot; dark</p>
+            </div>
+          </div>
+        </figure>
+      </section>
+
+      <section id="your-key-and-data" class="byo-section">
+        <div class="byo-receipt">
+          <h2>Make images, not accounts</h2>
+          <p>
+            BYOBanana has no backend, no server, no proxies. You bring your own Google AI Studio key.
+          </p>
+          <p class="byo-receipt-label">What that means:</p>
+          <ul class="byo-list">
+            <li>No account to make. No credits to buy.</li>
+            <li>Google processes the prompt, reference images, and generated output.</li>
+            <li>Google bills API use through the project attached to your key.</li>
+            <li>
+              BYOBanana saves your history in your browser, and nowhere else. Clear it and it's gone
+              for good. Same with your API key.
+            </li>
+          </ul>
+          <p>
+            Browser-based does not mean offline or fully private. Review the data flow before using
+            sensitive material.
+          </p>
+          <p>
+            <a class="byo-link" href="/guides/byok-image-generator-privacy/"
+              >Read the BYOK, storage, and Google processing guide</a
+            >
+          </p>
+        </div>
+      </section>
+
+      <section id="how-it-works" class="byo-section">
+        <h2>How it works</h2>
+        <div class="byo-steps">
+          <div class="byo-step">
+            <h3>1. Add a Google AI Studio key</h3>
+            <p>
+              Open the key panel, paste your key, and validate it against Google's model list.
+              Remembering the key is optional and off by default.
+            </p>
+          </div>
+          <div class="byo-step">
+            <h3>2. Set up a comparison run</h3>
+            <p>
+              Describe the subject. Choose images or a round project icon, one to three recipes, a
+              color palette, optional references, model settings, and the number of variants.
+            </p>
+          </div>
+          <div class="byo-step">
+            <h3>3. Review cost, generate, and compare</h3>
+            <p>
+              Check the estimate before generation. Watch candidates fill the contact sheet, inspect
+              the strongest options, and select the files you want.
+            </p>
+          </div>
+          <div class="byo-step">
+            <h3>4. Export the keepers</h3>
+            <p>
+              Download selected outputs as a ZIP. The bundle includes a text manifest with the model
+              settings, rendered prompts, recipes, palette, and file hashes used for that run.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="byo-section">
+        <h2>Frequently asked questions</h2>
+        <div class="byo-faq">
+          <h3>What is Nano Banana?</h3>
+          <p>
+            Nano Banana is Google's name for the native image generation models in the Gemini API.
+            BYOBanana is an independent, browser-based Nano Banana image generator built on selected
+            Gemini image models. It is not affiliated with or endorsed by Google.
+          </p>
+          <h3>Is BYOBanana free?</h3>
+          <p>
+            BYOBanana does not charge a subscription or sell image credits. Image generation uses
+            your Google API key, and Google API charges may apply. BYOBanana shows an estimated run
+            cost before generation.
+          </p>
+          <h3>Do I need an account?</h3>
+          <p>
+            You do not need a BYOBanana account. You do need a Google account, a Google AI Studio API
+            key, and access to a supported Gemini image model.
+          </p>
+          <h3>Is BYOBanana a private AI image generator?</h3>
+          <p>
+            It has a limited privacy advantage: prompts, images, and the key are not routed through a
+            BYOBanana application server. They are sent directly from your browser to Google, and
+            Google processes them under the terms for your API tier. Sessions and images are also
+            stored locally in your browser. It is not offline or fully private.
+          </p>
+          <h3>Where is my API key stored?</h3>
+          <p>
+            The key stays in browser memory unless you turn on Remember. Remember stores it as
+            plaintext in localStorage on this device. Any script running on the same site origin
+            could potentially read it, so do not remember a key on a shared device.
+          </p>
+          <h3>Can it create image variations from a reference image?</h3>
+          <p>
+            You can add reference images to a run and generate several candidates from the same
+            brief. BYOBanana also supports prompt-first batches where every candidate starts from the
+            same subject, style recipe, and palette.
+          </p>
+          <h3>Does it make logos?</h3>
+          <p>
+            BYOBanana can explore raster visual concepts and export round project icons. It does not
+            currently create editable vector logos, typography systems, brand kits, or
+            trademark-ready files.
+          </p>
+          <h3>Are generated images watermarked?</h3>
+          <p>
+            Google states that images generated by its current Nano Banana models include SynthID.
+            BYOBanana does not remove or bypass it.
+          </p>
+        </div>
+      </section>
+
+      <section class="byo-section byo-final">
+        <h2>Generate a bunch. Keep the best.</h2>
+        <p>
+          Use your own Google key to create, compare, and export Nano Banana image variations.
+        </p>
+        <p class="byo-hero-actions">
+          <a class="byo-cta" href="/app/"><span style="margin-right: 0.35em" aria-hidden="true">🍌</span>Open BYOBanana</a>
+        </p>
+        <p class="byo-hero-note">Google AI Studio key required. Google API charges apply.</p>
+      </section>
+    </main>
+
+    <footer class="byo-site-footer">
+      <p>
+        BYOBanana is an independent product and is not affiliated with or endorsed by Google. Google,
+        Gemini, Google AI Studio, and Nano Banana are referenced only to identify compatible services
+        and models.
+      </p>
+      <p class="byo-footer-credit">
+        Built with care by Rareș Gosman ·
+        <a href="https://rares.blog" rel="noopener">rares.blog</a>
+      </p>
+    </footer>
+
+    <!-- Progressive-enhancement light/dark toggle for the static site (landing + guides). Wires
+         the header button, flips data-mantine-color-scheme, and persists to the SAME localStorage
+         key theme-init.js + MantineProvider read, so the landing, guides, and /app stay in sync. -->
+    <script src="/theme-toggle.js"></script>
+    <script src="/hero-video.js"></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "geometric-isometric-icon",
+  "version": 7,
+  "name": "Geometric isometric icon",
+  "description": "Clean flat isometric icon: one dominant shape plus up to two small supporting forms, in solid palette colors.",
+  "kind": "project-icon",
+  "comparable": true,
+  "promptTemplate": "Create one icon.\n\nSubject brief:\n{{subject}}\n\nBackground:\nFirst create one continuous solid {{backgroundColor}} field covering the complete square image area, including every edge and all four corners. Then place the centered icon artwork directly on that uninterrupted field.\n\nColor palette:\nAvailable foreground palette: {{colorPalette}}. Draw the icon's foreground shapes from this palette unless the subject brief asks for different colors; you do not need to use every color. The background color is separate and does not count as a palette color.\n\nStyle contract:\nFlat geometric isometric icon, not a scene. Strict simple isometric geometry: one dominant silhouette and at most two small supporting forms. The icon should feel like a precision-machined miniature assembled from crisp modular volumes, every plane meeting at exact isometric angles. Assign different palette colors to the top and side planes of a volume so depth reads through flat color changes, never through shading. Favor compact, satisfying, toy-like proportions. One thin dark outline is allowed only where a complex form needs it. No texture, halftone, distressed or grungy treatment, lighting, cast shadows, gradients, gloss, bevels, photorealism, pseudo-text, labels, letters, or logos. Keep every critical part within the central 80 percent of the canvas. Use bold, simple forms without details that disappear at small display sizes.\n",
+  "preview": {
+    "type": "folio-icon",
+    "sizes": [
+      80,
+      96,
+      112
+    ],
+    "backgrounds": {
+      "light": "#FAFAFA",
+      "dark": "#18181B"
+    }
+  },
+  "export": {
+    "type": "folio-icon",
+    "transparentOutsideCircle": true
+  }
+}

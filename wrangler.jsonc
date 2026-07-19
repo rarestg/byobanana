@@ -1,0 +1,23 @@
+{
+  // Cloudflare Workers Static Assets (assets-only — this app has no backend). This native config
+  // (`npm run deploy`) is the DEFAULT deploy path. A generated-Worker fallback
+  // (`npm run deploy:worker`) exists for environments where the native Static Assets upload flow is
+  // unavailable (e.g. a proxy that clobbers the upload JWT) — see docs/DEPLOYING.md.
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "nano-banana-web",
+  "compatibility_date": "2026-07-01",
+  // Serve the Vite build straight from the edge. There is no `main` worker: the
+  // browser talks directly to Google's Gemini endpoint, so a worker would have
+  // nothing to do. The CSP egress lock in `public/_headers` is honored by Workers
+  // Static Assets and applied to these static responses.
+  "assets": {
+    "directory": "./dist"
+    // not_found_handling omitted (defaults to "none"): there is no client-side
+    // router, and `base: './'` means an SPA fallback would break relative asset
+    // URLs on deep paths. Unknown paths return a plain 404.
+  },
+  // No custom-domain routes here. On the generated-Worker path, routes live in the GENERATED
+  // worker-dist/wrangler.jsonc (source: scripts/build-worker.mjs) — see docs/DEPLOYING.md.
+  "workers_dev": true, // Publish the *.workers.dev URL so the deployed app is reachable (P7).
+  "preview_urls": true // Keep preview URLs for PR/branch builds.
+}

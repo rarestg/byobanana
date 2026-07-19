@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src 'self' https://generativelanguage.googleapis.com; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; base-uri 'none'; form-action 'none'; object-src 'none'"
+    />
+    <title>How to Generate and Compare AI Image Variations | BYOBanana</title>
+    <meta
+      name="description"
+      content="Learn how to generate useful AI image variations from one prompt or reference, control styles and palettes, compare candidates, and choose a winner."
+    />
+    <link rel="canonical" href="https://byobanana.com/guides/ai-image-variations/" />
+    <meta name="theme-color" content="#f4f4f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141418" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="BYOBanana" />
+    <meta
+      property="og:title"
+      content="How to Generate and Compare AI Image Variations | BYOBanana"
+    />
+    <meta
+      property="og:description"
+      content="Learn how to generate useful AI image variations from one prompt or reference, control styles and palettes, compare candidates, and choose a winner."
+    />
+    <meta property="og:url" content="https://byobanana.com/guides/ai-image-variations/" />
+    <meta property="og:image" content="https://byobanana.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="How to Generate and Compare AI Image Variations | BYOBanana"
+    />
+    <meta
+      name="twitter:description"
+      content="Learn how to generate useful AI image variations from one prompt or reference, control styles and palettes, compare candidates, and choose a winner."
+    />
+    <meta name="twitter:image" content="https://byobanana.com/og.png" />
+
+    <script type="application/ld+json">
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": "How to generate AI image variations you can actually compare",
+          "description": "Learn how to generate useful AI image variations from one prompt or reference, control styles and palettes, compare candidates, and choose a winner.",
+          "author": { "@type": "Person", "name": "Rareș T. Gosman" },
+          "datePublished": "2026-07-17",
+          "dateModified": "2026-07-17",
+          "mainEntityOfPage": "https://byobanana.com/guides/ai-image-variations/"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://byobanana.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "How to generate AI image variations you can actually compare",
+              "item": "https://byobanana.com/guides/ai-image-variations/"
+            }
+          ]
+        }
+      ]
+    </script>
+
+    <link rel="stylesheet" href="/landing.css" />
+    <script src="/theme-init.js"></script>
+  </head>
+  <body>
+    <header class="byo-site-header">
+      <div class="byo-brand-stack">
+        <a class="byo-brand" href="/" aria-label="BYOBanana home">
+          <span class="byo-brandmark" aria-hidden="true">
+            <span class="byo-bezel">
+              <img class="byo-banana" src="/favicon.svg" alt="" width="18" height="20" />
+            </span>
+          </span>
+          <span class="byo-brandtitle">
+            <span class="byo-brandname">BYOBanana</span>
+          </span>
+        </a>
+        <span class="byo-brand-tag">No credits. No subscription.</span>
+      </div>
+      <div class="byo-header-right">
+        <nav class="byo-nav" aria-label="Site">
+          <a href="/#how-it-works">How it works</a>
+          <a href="/#art-styles">Art styles</a>
+          <a href="/#image-variations">Image variations</a>
+          <a href="/#your-key-and-data">Your key and data</a>
+          <a class="byo-nav-cta" href="/app/"><span style="margin-right: 0.35em" aria-hidden="true">🍌</span>Open BYOBanana</a>
+        </nav>
+        <button type="button" class="byo-theme-toggle" aria-label="Switch color theme">
+          <svg
+            class="byo-icon-sun"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <circle cx="12" cy="12" r="4" />
+            <path
+              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+            />
+          </svg>
+          <svg
+            class="byo-icon-moon"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="byo-main">
+      <article class="byo-article">
+        <nav class="byo-breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span class="byo-crumb-sep" aria-hidden="true">/</span>
+          <span>Guides</span>
+          <span class="byo-crumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">How to generate AI image variations you can actually compare</span>
+        </nav>
+
+        <h1>How to generate AI image variations you can actually compare</h1>
+        <p class="byo-byline">By Rareș T. Gosman &middot; July 17, 2026</p>
+
+        <p>An AI image variation is useful only when you know what changed.</p>
+        <p>
+          If you rewrite the prompt, switch the style, change the palette, add a reference, and move
+          to a different model at the same time, you may get more images, but you will not learn much
+          from them. A better workflow holds most variables steady, changes one direction at a
+          time, and puts every candidate in the same view.
+        </p>
+        <p>
+          BYOBanana uses Google's Nano Banana image models through your own API key, creates several
+          candidates from one brief, and puts them in one contact sheet so you can pick a winner.
+        </p>
+        <p>
+          <strong><a href="/app/">Open BYOBanana and generate Nano Banana image variations</a></strong>
+        </p>
+
+        <h2>What counts as an AI image variation?</h2>
+
+        <h3>Prompt-first variations</h3>
+        <p>
+          Start with one text brief and generate several independent candidates. The subject and
+          controls stay the same, while the model varies details such as composition, shape,
+          lighting, and visual emphasis.
+        </p>
+        <p>Use prompt-first variations when you have an idea but no source image yet.</p>
+
+        <h3>Reference-first variations</h3>
+        <p>
+          Start with one or more reference images and a written instruction. The references can help
+          anchor the subject or direction while the model creates new candidates.
+        </p>
+        <p>
+          Use reference-first variations when showing is easier than describing.
+        </p>
+        <p>
+          Many tools use <code>AI image variation</code> to mean only the second task. BYOBanana
+          supports both: a prompt can stand alone, or you can add reference images to the same batch
+          workflow.
+        </p>
+
+        <h2>Four variables worth testing</h2>
+        <div class="byo-table-wrap" tabindex="0">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Variable</th>
+                <th scope="col">Hold steady</th>
+                <th scope="col">Change</th>
+                <th scope="col">What you learn</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Composition</th>
+                <td>Subject, recipe, palette</td>
+                <td>Variant seed or independent call</td>
+                <td>Which layout reads best</td>
+              </tr>
+              <tr>
+                <th scope="row">Art style</th>
+                <td>Subject, palette, settings</td>
+                <td>Recipe</td>
+                <td>Which visual language fits the idea</td>
+              </tr>
+              <tr>
+                <th scope="row">Color direction</th>
+                <td>Subject, recipe, settings</td>
+                <td>Palette</td>
+                <td>Which color system supports the subject</td>
+              </tr>
+              <tr>
+                <th scope="row">Reference influence</th>
+                <td>Subject, recipe, palette</td>
+                <td>Reference set</td>
+                <td>Whether visual anchors improve the result</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Do not test all four at once. Start with the decision that matters most.</p>
+
+        <h2>A repeatable image-variation workflow</h2>
+
+        <h3>1. Write a brief that describes the decision</h3>
+        <p>
+          Name the subject, intended use, and important constraints. Avoid filling the brief with
+          decorative adjectives before you know which direction you need.
+        </p>
+        <p>Weak:</p>
+        <blockquote>
+          <p>Make something amazing and futuristic.</p>
+        </blockquote>
+        <p>Stronger:</p>
+        <blockquote>
+          <p>
+            A compact project icon for a developer tool that compares database migrations. One
+            dominant object, legible at small size, no text.
+          </p>
+        </blockquote>
+        <p>The stronger brief gives every candidate the same job.</p>
+
+        <h3>2. Choose one comparison axis</h3>
+        <p>For a first run, choose either:</p>
+        <ul>
+          <li>One recipe with four composition variants</li>
+          <li>Three recipes with two variants each</li>
+          <li>One recipe tested against two palettes</li>
+          <li>One recipe with and without a reference image</li>
+        </ul>
+        <p>
+          Four variants is a practical starting point for composition. Two variants per recipe can be
+          enough for an initial style comparison. These are workflow suggestions, not guarantees of a
+          good result.
+        </p>
+
+        <h3>3. Keep model settings fixed</h3>
+        <p>
+          Use the same model, image size, aspect ratio, search setting, and subject brief across the
+          comparison. If you change a setting, record it.
+        </p>
+        <p>
+          A model change can affect how well the model follows your brief, plus visual quality,
+          speed, and price. An unlabeled mixed-model contact sheet is not a clean comparison.
+        </p>
+
+        <h3>4. Lock the palette when comparing styles</h3>
+        <p>
+          A fixed palette makes visual differences easier to attribute to the art style rather than
+          color mood. BYOBanana offers seven predefined palettes, each represented by exact hex
+          colors in the rendered prompt.
+        </p>
+        <p>
+          If palette fidelity is the experiment, do the reverse: keep the style recipe fixed and
+          change only the palette.
+        </p>
+        <p>
+          <a href="/guides/art-style-recipes-and-palettes/">See every BYOBanana art style recipe and palette</a>
+        </p>
+
+        <h3>5. Check the cost before generating</h3>
+        <p>
+          Every candidate is an API request billed through the Google project attached to your key. A
+          run with three recipes and four variants requests twelve candidates.
+        </p>
+        <p>
+          BYOBanana shows an estimate before generation. Treat it as an estimate, and verify current
+          model pricing in Google's documentation.
+        </p>
+
+        <h3>6. Compare in one contact sheet</h3>
+        <p>Scan the whole batch before opening a single candidate. Look for:</p>
+        <ul>
+          <li>Silhouette and composition</li>
+          <li>Subject accuracy</li>
+          <li>Palette adherence</li>
+          <li>Style adherence</li>
+          <li>Legibility at the intended size</li>
+          <li>Unwanted text or artifacts</li>
+          <li>Whether the result still works when cropped</li>
+        </ul>
+        <p>Then inspect the strongest candidates at full size.</p>
+
+        <h3>7. Export the keepers, not the whole experiment</h3>
+        <p>
+          Select the candidates that remain useful after inspection. BYOBanana downloads them in
+          one ZIP, along with a plain text manifest of how each image was made: model settings,
+          rendered prompts, recipes, palette, and file hashes.
+        </p>
+        <p>
+          The manifest documents the run. It is not proof of authorship, originality, or legal
+          clearance.
+        </p>
+
+        <h2>Worked comparison</h2>
+        <p>
+          One real run sent the &lsquo;SUMMER MIX&rsquo; cassette through two recipes with two variants each.
+          The result is four candidates in one contact sheet.
+        </p>
+        <figure class="byo-figure">
+          <img
+            src="/img/nano-banana-variations-contact-sheet.webp"
+            width="944"
+            height="580"
+            loading="lazy"
+            decoding="async"
+            alt="A four-candidate contact sheet: two hard-edge screenprint cassettes on top and two tenebrist oil-realism cassettes below, the same SUMMER MIX subject rendered by two recipes so the styles can be compared side by side."
+          />
+          <figcaption>
+            Generated with gemini-3.1-flash-lite-image (Nano Banana 2 Lite) on July 17, 2026. All four
+            candidates cost about 19 cents.
+          </figcaption>
+        </figure>
+        <p>Three things stand out:</p>
+        <ul>
+          <li>
+            <strong>Which candidate won and why.</strong> Hard-edge screenprint, variant 1: both reels
+            read as solid discs, the Sunlit coral banner and amber hubs carry the palette, and the
+            whole cassette stays legible shrunk to a tile.
+          </li>
+          <li>
+            <strong>Which candidate failed and why.</strong> Hard-edge screenprint, variant 2: the two
+            reels overlap and the right reel renders as a ghosted, half-transparent disc, so the tape
+            mechanism reads as unfinished. Same recipe, same prompt, one unlucky composition.
+          </li>
+          <li>
+            <strong>What to hold steady or change next.</strong> Keep the subject, recipe, and Sunlit
+            coral palette fixed. The oil-realism pair is handsome but reads as mood rather than a clean
+            playlist tile, so the next run would drop it and generate two more screenprint variants to
+            choose a composition.
+          </li>
+        </ul>
+        <div class="byo-detail-grid">
+          <figure>
+            <img
+              src="/img/nano-banana-variations-winner.webp"
+              width="760"
+              height="424"
+              loading="lazy"
+              decoding="async"
+              alt="The winning screenprint cassette at full size: two solid reels, a pink SUMMER MIX banner, amber and yellow hubs, legible at a glance."
+            />
+            <figcaption>
+              Winner: hard-edge screenprint, variant 1. Only the specified label as text.
+            </figcaption>
+          </figure>
+          <figure>
+            <img
+              src="/img/nano-banana-variations-rejected.webp"
+              width="760"
+              height="424"
+              loading="lazy"
+              decoding="async"
+              alt="The rejected screenprint cassette at full size: the right reel is a ghosted, half-transparent disc overlapping the left, so the tape mechanism reads as unfinished."
+            />
+            <figcaption>
+              <span class="byo-cell-fail">Rejected</span>: same recipe, variant 2. A real miss, not a
+              retouched one.
+            </figcaption>
+          </figure>
+        </div>
+        <p>
+          We publish the misses too. That is what a real run looks like.
+        </p>
+
+        <h2>How consistent will the variations be?</h2>
+        <p>Consistent art direction and consistent subject identity are different problems.</p>
+        <p>
+          A recipe and palette can repeat prompt constraints across a batch. That does not guarantee
+          identical characters, products, geometry, or layout. Current Nano Banana models accept
+          image inputs, so references can help. Generation is still probabilistic.
+        </p>
+        <p>If exact identity matters:</p>
+        <ul>
+          <li>Use clear, relevant reference images.</li>
+          <li>Avoid changing several attributes at once.</li>
+          <li>Keep the model and settings fixed.</li>
+          <li>Inspect details rather than trusting the thumbnail.</li>
+          <li>Expect to reject candidates.</li>
+        </ul>
+        <p>Do not promise character or product consistency based only on a shared style recipe.</p>
+
+        <h2>When to generate more variants</h2>
+        <p>
+          Generate another batch when the direction is correct but execution varies. Rewrite the
+          brief when every candidate fails for the same reason.
+        </p>
+        <p>Examples:</p>
+        <ul>
+          <li>Correct style, weak compositions: keep the recipe and palette, generate more variants.</li>
+          <li>Wrong focal object in every image: clarify the subject brief.</li>
+          <li>Palette ignored across the batch: simplify competing color instructions.</li>
+          <li>Good square image, poor circular crop: switch to a circle-safe project-icon recipe.</li>
+        </ul>
+        <p>More candidates cannot repair a contradictory brief.</p>
+
+        <h2>Frequently asked questions</h2>
+        <h3>Can AI generate variations of an existing image?</h3>
+        <p>
+          Yes. Add the image as a reference and describe what should remain stable or change. The
+          model creates a new image rather than a guaranteed pixel-level edit, so inspect identity and
+          detail carefully.
+        </p>
+        <h3>Can I create several variations from one prompt?</h3>
+        <p>
+          Yes. BYOBanana can request one to eight variants per selected recipe. Each candidate uses
+          the same rendered prompt for its recipe but comes from an independent generation call.
+        </p>
+        <h3>Is changing the art style the same as creating a variation?</h3>
+        <p>
+          It is one kind of variation. A composition variation keeps the style fixed, while a style
+          variation deliberately changes the visual treatment. Label the comparison so viewers know
+          which variable changed.
+        </p>
+        <h3>How many image variations should I generate?</h3>
+        <p>
+          Start with enough candidates to settle one decision. Four candidates is often manageable for
+          composition, while two candidates across several recipes can reveal broad style differences.
+          More variants increase API cost.
+        </p>
+        <h3>Does every variation use API quota?</h3>
+        <p>
+          Yes. Each generated candidate calls Google's API through your key. Model pricing and
+          availability can change.
+        </p>
+        <h3>Can BYOBanana make variations fully consistent?</h3>
+        <p>
+          No generator can guarantee that every visual detail remains identical across independent
+          outputs. Recipes, palettes, references, and fixed settings create stronger constraints, but
+          every result still needs review.
+        </p>
+
+        <h2>Try the workflow</h2>
+        <p>
+          Bring one subject to the Nano Banana image generator, choose the variable you want to test,
+          and compare the candidates in one view.
+        </p>
+        <p>
+          <strong><a href="/app/">Open BYOBanana</a></strong>
+        </p>
+        <p>Google AI Studio key required. Google API charges apply.</p>
+      </article>
+    </main>
+
+    <footer class="byo-site-footer">
+      <p>
+        BYOBanana is an independent product and is not affiliated with or endorsed by Google. Google,
+        Gemini, Google AI Studio, and Nano Banana are referenced only to identify compatible services
+        and models.
+      </p>
+    </footer>
+
+    <script src="/theme-toggle.js"></script>
+  </body>
+</html>

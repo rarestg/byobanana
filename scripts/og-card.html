@@ -1,0 +1,150 @@
+<!doctype html>
+<!-- Open Graph card source for byobanana.com. Rendered to public/og.png (1200x630) by
+     scripts/build-og.mjs via Playwright. Self-contained: system fonts only, the banana
+     mark is the repo's src/assets/banana-icon.svg (single source of truth). Committed so
+     the social image is reproducible. Zinc surface reads on both light and dark social
+     backgrounds; banana yellow is the one accent mark, teal marks the "keeper" tick. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+      }
+      .card {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #18181b;
+        color: #fafafa;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        padding: 84px 96px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      /* Subtle contact-sheet grid motif: faint hairlines, crop marks at the corners. */
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(#ffffff0a 1px, transparent 1px),
+          linear-gradient(90deg, #ffffff0a 1px, transparent 1px);
+        background-size: 120px 120px;
+        background-position: 0 -6px;
+      }
+      .crop {
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        border-color: #3f3f46;
+        border-style: solid;
+        border-width: 0;
+      }
+      .crop.tl {
+        top: 40px;
+        left: 40px;
+        border-top-width: 2px;
+        border-left-width: 2px;
+      }
+      .crop.tr {
+        top: 40px;
+        right: 40px;
+        border-top-width: 2px;
+        border-right-width: 2px;
+      }
+      .crop.bl {
+        bottom: 40px;
+        left: 40px;
+        border-bottom-width: 2px;
+        border-left-width: 2px;
+      }
+      .crop.br {
+        bottom: 40px;
+        right: 40px;
+        border-bottom-width: 2px;
+        border-right-width: 2px;
+      }
+      .top {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 28px;
+      }
+      .mark {
+        width: 92px;
+        height: 92px;
+        display: block;
+      }
+      .brand {
+        font-size: 60px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      /* The banana mark is the single yellow accent; the wordmark stays zinc-white so the
+         card matches the landing's restraint (no large yellow field). */
+      .brand b {
+        color: inherit;
+      }
+      .body {
+        position: relative;
+      }
+      .headline {
+        font-size: 96px;
+        line-height: 1.02;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .headline .teal {
+        color: #2dd4bf;
+      }
+      .foot {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 26px;
+        color: #a1a1aa;
+      }
+      .tick {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #2dd4bf;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="grid"></div>
+      <span class="crop tl"></span>
+      <span class="crop tr"></span>
+      <span class="crop bl"></span>
+      <span class="crop br"></span>
+
+      <div class="top">
+        <img class="mark" src="../src/assets/banana-icon.svg" alt="" />
+        <div class="brand">BYO<b>Banana</b></div>
+      </div>
+
+      <div class="body">
+        <div class="headline">Generate a bunch.<br /><span class="teal">Keep the best.</span></div>
+      </div>
+
+      <div class="foot">
+        <span class="tick"></span>
+        Nano Banana comparison workbench &nbsp;&middot;&nbsp; Bring your own Google key
+      </div>
+    </div>
+  </body>
+</html>

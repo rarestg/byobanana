@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src 'self' https://generativelanguage.googleapis.com; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; base-uri 'none'; form-action 'none'; object-src 'none'"
+    />
+    <title>AI Image Art Styles and Color Palettes | BYOBanana</title>
+    <meta
+      name="description"
+      content="Compare one AI image prompt across repeatable art style recipes and fixed color palettes. See BYOBanana's real styles and a controlled testing method."
+    />
+    <link rel="canonical" href="https://byobanana.com/guides/art-style-recipes-and-palettes/" />
+    <meta name="theme-color" content="#f4f4f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141418" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="BYOBanana" />
+    <meta property="og:title" content="AI Image Art Styles and Color Palettes | BYOBanana" />
+    <meta
+      property="og:description"
+      content="Compare one AI image prompt across repeatable art style recipes and fixed color palettes. See BYOBanana's real styles and a controlled testing method."
+    />
+    <meta property="og:url" content="https://byobanana.com/guides/art-style-recipes-and-palettes/" />
+    <meta property="og:image" content="https://byobanana.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="AI Image Art Styles and Color Palettes | BYOBanana" />
+    <meta
+      name="twitter:description"
+      content="Compare one AI image prompt across repeatable art style recipes and fixed color palettes. See BYOBanana's real styles and a controlled testing method."
+    />
+    <meta name="twitter:image" content="https://byobanana.com/og.png" />
+
+    <script type="application/ld+json">
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": "How to compare AI image art styles without losing control",
+          "description": "Compare one AI image prompt across repeatable art style recipes and fixed color palettes. See BYOBanana's real styles and a controlled testing method.",
+          "author": { "@type": "Person", "name": "Rareș T. Gosman" },
+          "datePublished": "2026-07-17",
+          "dateModified": "2026-07-17",
+          "mainEntityOfPage": "https://byobanana.com/guides/art-style-recipes-and-palettes/"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://byobanana.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "How to compare AI image art styles without losing control",
+              "item": "https://byobanana.com/guides/art-style-recipes-and-palettes/"
+            }
+          ]
+        }
+      ]
+    </script>
+
+    <link rel="stylesheet" href="/landing.css" />
+    <script src="/theme-init.js"></script>
+  </head>
+  <body>
+    <header class="byo-site-header">
+      <div class="byo-brand-stack">
+        <a class="byo-brand" href="/" aria-label="BYOBanana home">
+          <span class="byo-brandmark" aria-hidden="true">
+            <span class="byo-bezel">
+              <img class="byo-banana" src="/favicon.svg" alt="" width="18" height="20" />
+            </span>
+          </span>
+          <span class="byo-brandtitle">
+            <span class="byo-brandname">BYOBanana</span>
+          </span>
+        </a>
+        <span class="byo-brand-tag">No credits. No subscription.</span>
+      </div>
+      <div class="byo-header-right">
+        <nav class="byo-nav" aria-label="Site">
+          <a href="/#how-it-works">How it works</a>
+          <a href="/#art-styles">Art styles</a>
+          <a href="/#image-variations">Image variations</a>
+          <a href="/#your-key-and-data">Your key and data</a>
+          <a class="byo-nav-cta" href="/app/"><span style="margin-right: 0.35em" aria-hidden="true">🍌</span>Open BYOBanana</a>
+        </nav>
+        <button type="button" class="byo-theme-toggle" aria-label="Switch color theme">
+          <svg
+            class="byo-icon-sun"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <circle cx="12" cy="12" r="4" />
+            <path
+              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+            />
+          </svg>
+          <svg
+            class="byo-icon-moon"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="byo-main">
+      <article class="byo-article">
+        <nav class="byo-breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span class="byo-crumb-sep" aria-hidden="true">/</span>
+          <span>Guides</span>
+          <span class="byo-crumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">How to compare AI image art styles without losing control</span>
+        </nav>
+
+        <h1>How to compare AI image art styles without losing control</h1>
+        <p class="byo-byline">By Rareș T. Gosman &middot; July 17, 2026</p>
+
+        <p>
+          Random style prompts are hard to compare. If every prompt uses different words,
+          colors, and constraints, you cannot tell whether the style caused the result or the
+          whole brief did.
+        </p>
+        <p>
+          BYOBanana handles art styles as repeatable prompt recipes. Choose up to three recipes, keep
+          the subject and color palette fixed, and compare the generated candidates in one contact
+          sheet.
+        </p>
+        <p>
+          <strong><a href="/app/">Open BYOBanana and compare Nano Banana art styles side by side</a></strong>
+        </p>
+
+        <h2>What is an art style recipe?</h2>
+        <p>
+          A BYOBanana recipe is a structured prompt template. It wraps your subject brief and
+          chosen palette in a fixed set of style instructions.
+        </p>
+        <p>Recipes are not:</p>
+        <ul>
+          <li>Fine-tuned models</li>
+          <li>LoRAs</li>
+          <li>Guaranteed visual presets</li>
+          <li>Copies of a named living artist</li>
+        </ul>
+        <p>
+          They are repeatable instructions sent to a selected Google Gemini image model. The same
+          recipe can make a series feel more related, but the model still interprets every request and
+          results vary.
+        </p>
+
+        <h2>The current image art styles</h2>
+        <p>
+          The five image recipes below render the same three subjects with one fixed palette
+          (Sunlit coral) and two variants each. Read down a column to see a single style across
+          subjects; read across a row to compare five styles on the same object. Each cell shows the
+          stronger of its two candidates.
+        </p>
+        <div class="byo-gallery">
+          <div class="byo-gallery-head" aria-hidden="true">
+            <span></span>
+            <div class="byo-gallery-head-cells">
+            <span class="byo-gallery-colhead">Airy pastel modernist</span>
+            <span class="byo-gallery-colhead">Hard-edge geometric screenprint</span>
+            <span class="byo-gallery-colhead">Ornamental miniature maximalism</span>
+            <span class="byo-gallery-colhead">Refined pixel art</span>
+            <span class="byo-gallery-colhead">Tenebrist oil realism</span>
+            </div>
+          </div>
+        <div class="byo-gallery-row">
+          <h3 class="byo-gallery-rowlabel" id="gal-tel">Rotary telephone</h3>
+          <div class="byo-gallery-strip" role="region" aria-labelledby="gal-tel" tabindex="0">
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-telephone-airy-pastel.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A cherry-red rotary telephone rendered in the Airy pastel modernist style (luminous pastel, open paper texture), Sunlit coral palette." />            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-telephone-screenprint.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A cherry-red rotary telephone rendered in the Hard-edge geometric screenprint style (flat bold shapes, crisp geometry), Sunlit coral palette." />            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-telephone-ornamental.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A cherry-red rotary telephone rendered in the Ornamental miniature maximalism style (dense ornament, jewel-tone pattern), Sunlit coral palette." />            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-telephone-pixel-art.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A cherry-red rotary telephone rendered in the Refined pixel art style (deliberate pixel clusters, clean silhouette), Sunlit coral palette." />            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-telephone-oil-realism.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A cherry-red rotary telephone rendered in the Tenebrist oil realism style (dark oil, focused light), Sunlit coral palette." />            </figure>
+          </div>
+        </div>
+        <div class="byo-gallery-row">
+          <h3 class="byo-gallery-rowlabel" id="gal-cas">Cassette tape</h3>
+          <div class="byo-gallery-strip" role="region" aria-labelledby="gal-cas" tabindex="0">
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-cassette-airy-pastel.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A transparent ‘SUMMER MIX’ cassette tape rendered in the Airy pastel modernist style (luminous pastel, open paper texture), Sunlit coral palette." />            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-cassette-screenprint.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A transparent ‘SUMMER MIX’ cassette tape rendered in the Hard-edge geometric screenprint style (flat bold shapes, crisp geometry), Sunlit coral palette." />            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-cassette-ornamental.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A transparent ‘SUMMER MIX’ cassette tape rendered in the Ornamental miniature maximalism style (dense ornament, jewel-tone pattern), Sunlit coral palette." />            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-cassette-pixel-art.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A transparent ‘SUMMER MIX’ cassette tape rendered in the Refined pixel art style (deliberate pixel clusters, clean silhouette), Sunlit coral palette." />            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-cassette-oil-realism.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A transparent ‘SUMMER MIX’ cassette tape rendered in the Tenebrist oil realism style (dark oil, focused light), Sunlit coral palette." />            </figure>
+          </div>
+        </div>
+        <div class="byo-gallery-row">
+          <h3 class="byo-gallery-rowlabel" id="gal-sne">Canvas sneaker</h3>
+          <div class="byo-gallery-strip" role="region" aria-labelledby="gal-sne" tabindex="0">
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-sneaker-airy-pastel.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A red-and-white canvas sneaker rendered in the Airy pastel modernist style (luminous pastel, open paper texture), Sunlit coral palette." />            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-sneaker-screenprint.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A red-and-white canvas sneaker rendered in the Hard-edge geometric screenprint style (flat bold shapes, crisp geometry), Sunlit coral palette." />            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-sneaker-ornamental.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A red-and-white canvas sneaker rendered in the Ornamental miniature maximalism style (dense ornament, jewel-tone pattern), Sunlit coral palette." />            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-sneaker-pixel-art.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A red-and-white canvas sneaker rendered in the Refined pixel art style (deliberate pixel clusters, clean silhouette), Sunlit coral palette." />            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-sneaker-oil-realism.webp" width="360" height="360" loading="lazy" decoding="async"
+                alt="A red-and-white canvas sneaker rendered in the Tenebrist oil realism style (dark oil, focused light), Sunlit coral palette." />            </figure>
+          </div>
+        </div>
+        </div>
+        <p class="byo-gallery-cap">
+          All 30 images generated with Nano Banana 2 Lite on July 17, 2026, for about $1.42 total.
+        </p>
+        <p>
+          A sixth image mode, <strong>Custom image</strong>, is left out of this grid on purpose: it
+          gives full manual control, using the subject field as the complete prompt with no bundled
+          style instructions, so there is no repeatable recipe to compare.
+        </p>
+        <div class="byo-detail-grid">
+          <figure>
+            <img src="/img/nano-banana-cassette-screenprint-winner.webp" width="560" height="560" loading="lazy" decoding="async"
+              alt="The kept screenprint cassette: bold flat shapes, clean SUMMER MIX banner, no stray text." />
+            <figcaption>
+              Kept candidate (screenprint cassette, variant 2). Only the specified label as text.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="/img/nano-banana-cassette-screenprint-rejected.webp" width="560" height="560" loading="lazy" decoding="async"
+              alt="The rejected screenprint cassette: the model printed a palette hex value 292524 as literal text below the label." />
+            <figcaption>
+              <span class="byo-cell-fail">Rejected candidate</span> (same cell, variant 1). The model
+              rendered a palette hex value (#292524) as literal text, breaking the no-text rule.
+            </figcaption>
+          </figure>
+        </div>
+        <p>
+          What stays stable across a row is the subject and palette; what changes most is composition
+          and texture. The ornamental recipe reframes each object inside dense borders, while the
+          screenprint recipe flattens it to a few shapes. The pixel and screenprint recipes hold the
+          coral palette most literally; the oil-realism recipe reads it as warm light rather than flat
+          color.
+        </p>
+
+        <h2>Curated project-icon recipes</h2>
+        <p>
+          The five project-icon recipes take one brief (a compact icon for a developer tool that
+          compares database migrations), and each renders a square composition that survives a
+          circular crop.
+        </p>
+        <div class="byo-gallery byo-gallery-icons">
+          <div class="byo-gallery-head" aria-hidden="true">
+            <div class="byo-gallery-head-cells">
+              <span class="byo-gallery-colhead">Cut-paper icon</span>
+              <span class="byo-gallery-colhead">Geometric isometric icon</span>
+              <span class="byo-gallery-colhead">Impact icon</span>
+              <span class="byo-gallery-colhead">Modern flat icon</span>
+              <span class="byo-gallery-colhead">Glass icon</span>
+            </div>
+          </div>
+          <div class="byo-gallery-row">
+            <div class="byo-gallery-strip" role="region" aria-label="Project-icon recipes, one brief across five recipes" tabindex="0">
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-icon-cut-paper.webp" width="320" height="320" loading="lazy" decoding="async"
+                alt="A database-migration project icon in the Cut-paper icon recipe: two layered cut-paper database cylinders, a cream one in front and a gray-and-black banded one behind, with a bold coral arrow sweeping from the front cylinder into the rear one and a small amber tag between them, Sunlit coral palette." />
+              <figcaption><span class="byo-cell-recipe">Cut-paper icon</span></figcaption>
+            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-icon-isometric.webp" width="320" height="320" loading="lazy" decoding="async"
+                alt="A database-migration project icon in the Geometric isometric icon recipe: an isometric stack of three flat slab layers with cream tops and dark seams, a yellow card and a coral-bordered pink card leaning against its left side, Sunlit coral palette." />
+              <figcaption><span class="byo-cell-recipe">Geometric isometric icon</span></figcaption>
+            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-icon-impact.webp" width="320" height="320" loading="lazy" decoding="async"
+                alt="A database-migration project icon in the Impact icon recipe: a bold tilted black branching arrow, one head pointing up-left and one up-right ending in a spark burst, riding a coral swoosh with thruster stripes at its base, Sunlit coral palette." />
+              <figcaption><span class="byo-cell-recipe">Impact icon</span></figcaption>
+            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-icon-modern-flat.webp" width="320" height="320" loading="lazy" decoding="async"
+                alt="A database-migration project icon in the Modern flat icon recipe: a rounded database-cylinder-and-page hybrid with a soft amber-to-coral diagonal gradient and white band lines, flanked by two gray panels with inward-facing chevrons, Sunlit coral palette." />
+              <figcaption><span class="byo-cell-recipe">Modern flat icon</span></figcaption>
+            </figure>
+            <figure class="byo-cell">
+              <img src="/img/nano-banana-icon-glass.webp" width="320" height="320" loading="lazy" decoding="async"
+                alt="A database-migration project icon in the Glass icon recipe: a frosted-glass disk with two embossed circular refresh arrows around a small frosted cylinder at its center, warm amber and coral tints glowing through, Sunlit coral palette." />
+              <figcaption><span class="byo-cell-recipe">Glass icon</span></figcaption>
+            </figure>
+            </div>
+          </div>
+        </div>
+        <p class="byo-gallery-cap">
+          One controlled comparison: the subject brief, Sunlit coral palette, #FFFDF7 background
+          color, Nano Banana 2 Lite model, and generation settings were held fixed across all five
+          cells; only the recipe changed. Each cell shows the strongest of its sampled candidates.
+        </p>
+        <p>
+          A <strong>Custom icon</strong> mode is likewise left out: same full manual control, plus the
+          same circular PNG export.
+        </p>
+
+        <h2>Seven fixed color palettes</h2>
+        <p>The palette picker passes exact hex colors into each compatible recipe.</p>
+        <div class="byo-table-wrap" tabindex="0">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Palette</th>
+                <th scope="col">Direction</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Folio teal</th>
+                <td>Cool zinc neutrals with a teal accent</td>
+              </tr>
+              <tr>
+                <th scope="row">Ink &amp; ochre</th>
+                <td>Restrained warm editorial colors</td>
+              </tr>
+              <tr>
+                <th scope="row">Coastal blue</th>
+                <td>Stone neutrals with sky and cobalt blues</td>
+              </tr>
+              <tr>
+                <th scope="row">Sunlit coral</th>
+                <td>Warm paper, amber light, and coral accents</td>
+              </tr>
+              <tr>
+                <th scope="row">Garden green</th>
+                <td>Botanical greens with deep forest neutrals</td>
+              </tr>
+              <tr>
+                <th scope="row">Orchid dusk</th>
+                <td>Violet and orchid accents with quiet neutrals</td>
+              </tr>
+              <tr>
+                <th scope="row">Pastel prism</th>
+                <td>A broad spectrum for airy, layered artwork</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          A palette in a prompt is a target, not a pixel-level lock. Models may blend, shade, or
+          introduce nearby colors. Evaluate the actual output instead of assuming exact compliance.
+        </p>
+
+        <h2>Style and palette solve different problems</h2>
+        <p>Style controls the visual language. Palette controls the requested color system.</p>
+        <p>
+          For example, a hard-edge screenprint recipe can use Coastal blue or Sunlit coral without
+          becoming a different medium. A fixed palette across several recipes lets you compare visual
+          languages while keeping color direction relatively stable.
+        </p>
+        <p>Use this matrix when planning a run:</p>
+        <div class="byo-table-wrap" tabindex="0">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Question</th>
+                <th scope="col">Keep fixed</th>
+                <th scope="col">Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Which style suits this subject?</th>
+                <td>Subject, palette, model, settings</td>
+                <td>Recipe</td>
+              </tr>
+              <tr>
+                <th scope="row">Which palette suits this style?</th>
+                <td>Subject, recipe, model, settings</td>
+                <td>Palette between runs</td>
+              </tr>
+              <tr>
+                <th scope="row">Which composition is strongest?</th>
+                <td>Subject, recipe, palette, model</td>
+                <td>Variant</td>
+              </tr>
+              <tr>
+                <th scope="row">Does a reference improve direction?</th>
+                <td>Subject, recipe, palette, model</td>
+                <td>Reference input</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <a href="/guides/ai-image-variations/">Learn how to structure and compare an image-variation batch</a>
+        </p>
+
+        <h2>A controlled same-prompt style test</h2>
+
+        <h3>1. Choose a subject with visible structure</h3>
+        <p>
+          Use a brief that gives every recipe something concrete to interpret. Include the intended
+          use and constraints.
+        </p>
+        <p>Example:</p>
+        <blockquote>
+          <p>
+            An editorial illustration about maintaining old software. A careful mechanic repairs a
+            large mechanical clock assembled from code windows. Clear focal subject, room for a
+            headline, no readable text.
+          </p>
+        </blockquote>
+
+        <h3>2. Choose one palette</h3>
+        <p>
+          Hold the palette fixed for the complete style comparison. Otherwise color mood can drown out
+          the differences in medium and composition.
+        </p>
+
+        <h3>3. Select up to three recipes</h3>
+        <p>
+          Start with recipes that pull in clearly different directions. Three near-neighbors tell you
+          less than pastel illustration, screenprint, and oil realism side by side.
+        </p>
+
+        <h3>4. Use two variants per recipe</h3>
+        <p>
+          One image can misrepresent a recipe because generation is probabilistic. Two candidates
+          show whether a result is a repeatable direction or a lucky exception.
+        </p>
+
+        <h3>5. Keep all other settings fixed</h3>
+        <p>
+          Use the same model, size, aspect ratio, reference inputs, and search setting. Record the
+          settings with the gallery.
+        </p>
+
+        <h3>6. Score the candidates against the job</h3>
+        <p>Do not select only by visual novelty. Check:</p>
+        <ul>
+          <li>Does the subject read immediately?</li>
+          <li>Does the style support the intended context?</li>
+          <li>Does the palette remain recognizable?</li>
+          <li>Is there enough room for surrounding layout?</li>
+          <li>Does detail survive at the intended display size?</li>
+          <li>Did the model introduce unwanted text?</li>
+        </ul>
+        <p>
+          The gallery at the top of this page shows results from an unretouched BYOBanana run of
+          that test.
+        </p>
+
+        <h2>How to create a more consistent AI image style</h2>
+        <p>Repeatable recipes help, but consistency comes from the complete workflow.</p>
+
+        <h3>Keep the recipe version stable</h3>
+        <p>
+          Changing the recipe wording changes the test. Save the rendered prompt, or export the run
+          as a ZIP that records exactly how it was made, when a direction matters.
+        </p>
+
+        <h3>Reuse the same palette</h3>
+        <p>
+          Exact hex values reduce ambiguous color naming. They do not guarantee exact pixels, so
+          reject outputs that drift too far.
+        </p>
+
+        <h3>Keep model and settings stable</h3>
+        <p>
+          Model updates and model switches can change interpretation. Record the model ID and date for
+          important production work.
+        </p>
+
+        <h3>Use references deliberately</h3>
+        <p>
+          A reference can anchor composition, subject, or visual direction, but those goals can
+          conflict. Say what the reference is for instead of hoping the model guesses.
+        </p>
+
+        <h3>Compare before refining</h3>
+        <p>
+          Choose the broad visual direction first. Refine details after selecting a recipe, otherwise
+          each candidate becomes a different experiment.
+        </p>
+
+        <h2>Frequently asked questions</h2>
+        <h3>What art styles can an AI image generator create?</h3>
+        <p>
+          Modern image models can interpret many photography, illustration, print, pixel-art,
+          painting, and 3D directions. BYOBanana ships five curated image-art
+          recipes, five curated project-icon recipes, and custom modes for each family.
+        </p>
+        <h3>Can I use the same prompt with different art styles?</h3>
+        <p>
+          Yes. BYOBanana renders the same subject through up to three selected recipes and shows the
+          candidates together. Keep the palette and model settings fixed for a cleaner comparison.
+        </p>
+        <h3>Can an AI image generator follow a custom color palette?</h3>
+        <p>
+          It can use exact palette colors as prompt constraints, but compliance is not guaranteed.
+          Generated shading and blending may introduce nearby colors. Review the output at full size.
+        </p>
+        <h3>Do recipes train a custom AI model?</h3>
+        <p>
+          No. BYOBanana recipes are structured prompt templates. They do not train, fine-tune, or
+          modify Google's models.
+        </p>
+        <h3>Can art style recipes guarantee consistent characters?</h3>
+        <p>
+          No. A shared recipe helps maintain visual direction, not exact identity. Use references and
+          fixed settings, then inspect every candidate.
+        </p>
+        <h3>Can I write my own style prompt?</h3>
+        <p>
+          Yes. Custom image and Custom icon modes use the subject field as the complete prompt and do
+          not apply a bundled style or palette.
+        </p>
+
+        <h2>Compare a real batch</h2>
+        <p>
+          Choose one subject, hold the palette steady, and test up to three art directions in one
+          contact sheet.
+        </p>
+        <p>
+          <strong><a href="/app/">Open BYOBanana</a></strong>
+        </p>
+        <p>Google AI Studio key required. Google API charges apply.</p>
+      </article>
+    </main>
+
+    <footer class="byo-site-footer">
+      <p>
+        BYOBanana is an independent product and is not affiliated with or endorsed by Google. Google,
+        Gemini, Google AI Studio, and Nano Banana are referenced only to identify compatible services
+        and models.
+      </p>
+    </footer>
+
+    <script src="/theme-toggle.js"></script>
+  </body>
+</html>
