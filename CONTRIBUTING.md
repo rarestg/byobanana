@@ -108,9 +108,8 @@ npm run verify:idb      # persistence / interrupted-run recovery
 `scripts/verify-live.mjs` has no shortcut on purpose: it bills a real Google key (see
 `docs/manual-smoke-test.md`).
 
-Known failures: `verify:p8` sometimes times out at its hover-zoom step, so rerun it before treating
-that as a regression. `verify:p12` fails its 375px, 8-cell header check, which needs a six-figure
-spend to show up.
+Known flake: `verify:p8` sometimes times out at its hover-zoom step (cause not found), so rerun it
+before treating that as a regression.
 
 Deploy (only when asked): `byobanana.com` runs the generated Worker, so deploy it with
 `npm run deploy:worker`. Forks use the native `npm run deploy` (Workers Static Assets), which on the

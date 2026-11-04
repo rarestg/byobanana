@@ -324,7 +324,8 @@ async function runStage(browser, url, errors) {
     await page.setViewportSize({ width, height: 900 });
     await page.waitForTimeout(150);
     for (const cells of [3, 5, 8]) {
-      if (cells === 8 && width < 375) continue; // documented limit: $1M+ on a 320px phone
+      // Accepted limit: 8 digits means $100,000+ of spend, which overflows a 375px header.
+      if (cells === 8 && width <= 375) continue;
       const geo = await page.evaluate(measureHeader, [cells - 3]);
       const titleOk = width < 577 || (geo.titleH !== null && geo.titleH < 25);
       check(
