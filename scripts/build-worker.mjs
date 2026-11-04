@@ -11,7 +11,7 @@
 //
 // Output: worker-dist/index.js + worker-dist/wrangler.jsonc. Deploy with:
 //   npm run build && node scripts/build-worker.mjs && npx wrangler deploy --config worker-dist/wrangler.jsonc
-// When the native Static Assets path is available, prefer `npm run deploy`. See docs/DEPLOYING.md.
+// Forks should prefer `npm run deploy`; byobanana.com itself runs this path. See docs/DEPLOYING.md.
 import { readFileSync, readdirSync, mkdirSync, writeFileSync, statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";

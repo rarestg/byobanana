@@ -2,7 +2,8 @@
   // Cloudflare Workers Static Assets (assets-only — this app has no backend). This native config
   // (`npm run deploy`) is the DEFAULT deploy path. A generated-Worker fallback
   // (`npm run deploy:worker`) exists for environments where the native Static Assets upload flow is
-  // unavailable (e.g. a proxy that clobbers the upload JWT) — see docs/DEPLOYING.md.
+  // unavailable (e.g. a proxy that clobbers the upload JWT) — see docs/DEPLOYING.md. Forks use this
+  // config; byobanana.com itself runs the generated Worker, so do not deploy this to its account.
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "nano-banana-web",
   "compatibility_date": "2026-07-01",
