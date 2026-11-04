@@ -105,6 +105,7 @@ npm run verify:idb      # persistence / interrupted-run recovery
 # ...see package.json "verify:*" for the rest
 ```
 
-Deploy (only when asked): the native `npm run deploy` (Workers Static Assets) is the default; a
-generated Worker fallback (`npm run deploy:worker`) exists for environments where the native upload
-flow is unavailable. See `docs/DEPLOYING.md` for the full guide, including `SITE_URL` for forks.
+Deploy (only when asked): `byobanana.com` runs the generated Worker, so deploy it with
+`npm run deploy:worker`. Forks use the native `npm run deploy` (Workers Static Assets), which on the
+author's account would replace the live Worker. See `docs/DEPLOYING.md` for the full guide,
+including `SITE_URL` for forks.

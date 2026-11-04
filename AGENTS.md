@@ -63,8 +63,9 @@ npm run build   # tsc --noEmit && vite build && the dash gate — must be green
 
 UI changes also need the relevant `verify:*` / `screenshot` harness in `package.json` (real
 Chromium, not part of `npm test`) and screenshots in both color schemes. There is no API key in
-CI, so exercise flows with `?mock=1`. Deploy only when asked: `npm run deploy` (native Workers
-Static Assets) is the default; `npm run deploy:worker` is a fallback (see `docs/DEPLOYING.md`).
+CI, so exercise flows with `?mock=1`. Deploy only when asked. `byobanana.com` runs the generated
+Worker, so deploy it with `npm run deploy:worker`. `npm run deploy` is the path for forks; on the
+author's account it would replace the live Worker (see `docs/DEPLOYING.md`).
 
 ## Going deeper
 

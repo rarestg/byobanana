@@ -63,15 +63,24 @@ no provider call). See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the mock runner 
   still leak a remembered key. Treat "remember my key" accordingly.
 - Google is migrating away from standard API keys during 2026; expect the key model to change.
 
-## Deploy
+## Deploy your own
 
-The app is designed for Cloudflare Workers Static Assets (assets-only, no backend). A generated
-Worker fallback exists for environments where the native Static Assets upload flow is unavailable.
-See **[`docs/DEPLOYING.md`](docs/DEPLOYING.md)** for the full guide, including the `SITE_URL`
-configuration a fork must set so it ships its own canonical URLs and is not auto-noindexed.
+BYOBanana has no backend and no secrets, so deploying it only uploads static files to Cloudflare.
+Cloudflare's free plan is enough. Google API charges still apply to the key used in the app.
 
-> `byobanana.com` is the original author's deployment and domain. A fork must configure its own
-> `SITE_URL`, Worker name, routes, and domain; see the deploy guide.
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/rarestg/byobanana)
+
+The button copies this repo to your GitHub account and deploys it. Or deploy from a clone:
+
+```sh
+npm ci
+npx wrangler login
+npm run deploy
+```
+
+Either way, you get a `*.workers.dev` URL with no configuration. If your copy will be public or use
+your own domain, set `SITE_URL` so its canonical URLs point at your site, not `byobanana.com`. See
+**[`docs/DEPLOYING.md`](docs/DEPLOYING.md)**.
 
 ## Contributing
 

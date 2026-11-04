@@ -158,12 +158,12 @@ prod, in-memory in tests — the queue is unchanged either way) and the injected
   `persisted` (re-acquire, not reload, so a restored primary stays primary and a contended one
   degrades to secondary). Guarded by `useSingleTab.test.tsx` (wiring) and `verify:bfcache` (real
   Chromium round trip).
-- **`public/_headers` is the single source of headers.** The default deploy is native Workers
-  Static Assets (`npm run deploy`); a generated Worker (`build-worker.mjs`, `npm run deploy:worker`)
-  is the fallback that additionally applies `public/_headers` to every response it serves (redirects
-  and errors included) and does host-aware canonicalization: `noindex` is decided per request from
-  the host (`hostname !== PROD_HOST`, where `PROD_HOST` is derived from `SITE_URL`, defaulting to
-  `byobanana.com`). See `docs/DEPLOYING.md`.
+- **`public/_headers` is the single source of headers.** Forks deploy with native Workers Static
+  Assets (`npm run deploy`). `byobanana.com` runs a generated Worker (`build-worker.mjs`,
+  `npm run deploy:worker`), which additionally applies `public/_headers` to every response it serves
+  (redirects and errors included) and does host-aware canonicalization: `noindex` is decided per
+  request from the host (`hostname !== PROD_HOST`, where `PROD_HOST` is derived from `SITE_URL`,
+  defaulting to `byobanana.com`). See `docs/DEPLOYING.md`.
 
 ## Cross-cutting concerns
 

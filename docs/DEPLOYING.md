@@ -3,11 +3,32 @@
 This guide is for deploying **your own** copy of BYOBanana to Cloudflare. It has no backend, so
 "deploy" means uploading the static build (`dist/`) to Cloudflare's edge.
 
-> **`byobanana.com` is the original author's deployment and domain.** A fork configures its own
-> `SITE_URL` (below), its own domain and routes, and (optionally) its own Worker name. None of the
-> author's infrastructure is shared: Worker names are scoped to a Cloudflare account, so on your own
-> account you can keep `nano-banana-web` or pick any other name freely (see
+> **`byobanana.com` is the original author's deployment and domain.** A public fork configures its
+> own `SITE_URL` (below), its own domain and routes, and (optionally) its own Worker name. None of
+> the author's infrastructure is shared: Worker names are scoped to a Cloudflare account, so on your
+> own account you can keep `nano-banana-web` or pick any other name freely (see
 > [Worker name](#worker-name)).
+
+## Quick start
+
+Both options use the native config in `wrangler.jsonc`, need no edits, and give you a
+`*.workers.dev` URL.
+
+**Deploy button:** Cloudflare copies this repo to your GitHub account, lets you name the repo and
+Worker, then builds and deploys your copy with Workers Builds.
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/rarestg/byobanana)
+
+**From a clone:**
+
+```sh
+npm ci
+npx wrangler login
+npm run deploy
+```
+
+If only you will use this copy, you are done. If it will be public or use your own domain, set
+[`SITE_URL`](#site_url-ship-your-own-canonical-urls).
 
 ## Prerequisites
 
@@ -18,24 +39,29 @@ This guide is for deploying **your own** copy of BYOBanana to Cloudflare. It has
   environment variable (a token with Workers Scripts + Workers Routes permissions for your account;
   add zone permissions too if you bind a custom domain).
 
-## `SITE_URL`: ship your own canonical URLs (read this first)
+## `SITE_URL`: ship your own canonical URLs
 
 The committed source bakes the author's origin (`https://byobanana.com`) into the canonical / Open
 Graph / JSON-LD URLs, `sitemap.xml`, and `robots.txt`.
 
-So if you deploy **either** path without configuring your origin, your fork ships canonical +
-sitemap URLs pointing at **the author's** site (search engines would then treat the author's site as
-the canonical version of your pages). On top of that, the **generated-Worker** path treats the baked
-origin as the one crawlable host and adds `X-Robots-Tag: noindex` to every other host, so an
-unconfigured generated-Worker deploy also **noindexes itself**.
+A deploy without `SITE_URL` still works, and this does not matter for a copy only you use. A public
+copy, though, ships canonical + sitemap URLs pointing at **the author's** site, so search engines
+would treat the author's site as the canonical version of your pages. On top of that, the
+**generated-Worker** path treats the baked origin as the one crawlable host and adds
+`X-Robots-Tag: noindex` to every other host, so an unconfigured generated-Worker deploy also
+**noindexes itself**.
 
 Fix both by setting `SITE_URL` to your own origin at deploy time (a bare `https://host` origin: no
-path, query, or trailing slash):
+path, query, or trailing slash; a `*.workers.dev` URL works too):
 
 ```sh
 SITE_URL=https://yourdomain.com npm run deploy         # native path
 SITE_URL=https://yourdomain.com npm run deploy:worker  # generated-Worker path
 ```
+
+On a Deploy button copy, add `SITE_URL` under your Worker's **Settings > Build > Build Variables and
+Secrets**, then run a new build. Use a build variable, not a runtime variable, because the build
+writes `SITE_URL` into the HTML.
 
 `SITE_URL` is applied as a post-build rewrite over `dist/` (see `scripts/site-url.mjs`): it swaps
 the baked origin in the built HTML/xml/txt and derives the Worker's production host (for the noindex
@@ -143,3 +169,12 @@ npx wrangler rollback --config worker-dist/wrangler.jsonc   # generated path
 ```
 
 Rolling back reverts the Worker version; any attached custom domains stay bound.
+
+## `byobanana.com` itself
+
+This section is for the maintainer. The live site runs the **generated Worker**, because its `www`
+redirect and host-aware `noindex` come from that Worker. Merging to `main` does not deploy it; run
+`npm run deploy:worker` on the author's Cloudflare account.
+
+Do not run `npm run deploy` on that account. `wrangler.jsonc` uses the same Worker name,
+`nano-banana-web`, so it would replace the live Worker with the native build and drop that behavior.
