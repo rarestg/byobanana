@@ -22,10 +22,11 @@ The static site lives in `index.html` + `public/`.
 
 - **Design system** → `src/theme.ts` (colors, radius, contrast handling) + `src/app.css`
   (per-scheme contrast vars); static-site tokens live in `public/landing.css`.
-- **Security headers / CSP** → `public/_headers` (single source; applied by the generated Worker).
+- **Security headers / CSP** → `public/_headers` (single source).
 - **Wire contract to Google** → `src/core/gemini.ts` + `docs/manual-smoke-test.md`.
 - **Model catalog & pricing snapshot** → `src/core/models.ts`.
 - **Deploy (native + generated-Worker fallback) & `SITE_URL` for forks** → `docs/DEPLOYING.md`.
+- **How to run it** → `README.md`.
 - **How to work here (conventions)** → `CONTRIBUTING.md`.
 - **Public copy rules & claim guardrails** → `CONTRIBUTING.md` ("Public copy rules"). The shipped
   copy in `index.html` + guide HTML is the copy of record and must conform to it; do not invent
@@ -38,8 +39,8 @@ Breaking one of these is a regression even if tests pass. `ARCHITECTURE.md` expl
 - **One egress.** Only `src/core/gemini.ts` calls the provider; the only network destination is
   `generativelanguage.googleapis.com`. Do not add other fetch destinations.
 - **`/v1beta`, never `/v1`** for the image API.
-- **CSP `connect-src`** stays `'self'` + the Google endpoint, in `public/_headers` and both HTML
-  `<meta>` tags. A BYO key must never become POSTable elsewhere.
+- **CSP `connect-src`** stays `'self'` + the Google endpoint, in `public/_headers` and every shipped
+  HTML `<meta>` tag. A BYO key must never become POSTable elsewhere.
 - **Static pages never touch Mantine runtime CSS variables** — they key off
   `data-mantine-color-scheme` (set pre-paint by `public/theme-init.js`), which must stay in
   lock-step with `MantineProvider`.
@@ -58,7 +59,7 @@ Breaking one of these is a regression even if tests pass. `ARCHITECTURE.md` expl
 
 ```sh
 npm test        # vitest (all pure logic + UI drive-throughs) — must be green
-npm run build   # tsc --noEmit && vite build && the dash gate — must be green
+npm run build   # tsc --noEmit && vite build && site-url.mjs && the dash gate — must be green
 ```
 
 UI changes also need the relevant `verify:*` / `screenshot` harness in `package.json` (real
@@ -66,11 +67,3 @@ Chromium, not part of `npm test`) and screenshots in both color schemes. There i
 CI, so exercise flows with `?mock=1`. Deploy only when asked. `byobanana.com` runs the generated
 Worker, so deploy it with `npm run deploy:worker`. `npm run deploy` is the path for forks; on the
 author's account it would replace the live Worker (see `docs/DEPLOYING.md`).
-
-## Going deeper
-
-- Where does X live / why is it shaped this way → `ARCHITECTURE.md`
-- How do I build UI / what's enforced → `CONTRIBUTING.md`
-- What is this + how do I run it → `README.md`
-- Live wire contract & key handling → `docs/manual-smoke-test.md`
-- Deploy & `SITE_URL` for forks → `docs/DEPLOYING.md`
