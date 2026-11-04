@@ -21,8 +21,10 @@
     "verify:idb": "node scripts/verify-idb.mjs",
     "verify:tabs": "node scripts/verify-tabs.mjs",
     "verify:bfcache": "node scripts/verify-bfcache.mjs",
+    "verify:p8": "node scripts/verify-p8.mjs",
     "verify:p10": "node scripts/verify-p10.mjs",
     "verify:p12": "node scripts/verify-p12.mjs",
+    "verify:p32": "node scripts/verify-p32.mjs",
     "verify:compress": "node scripts/verify-compress.mjs",
     "check:dashes": "node scripts/check-dashes.mjs"
   },

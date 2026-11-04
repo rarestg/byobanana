@@ -91,7 +91,7 @@ validated key. Check `cost.status` before reaching for a number.
 
 ```sh
 npm test           # vitest — ported core logic, grounding parser, UI drive-throughs
-npm run build      # tsc --noEmit && vite build && the dash gate
+npm run build      # tsc --noEmit && vite build && site-url.mjs && the dash gate
 ```
 
 Both must be green. For UI changes, also run the relevant real-browser harness (these need a real
@@ -104,6 +104,13 @@ npm run verify:bfcache  # single-tab guard survives same-tab bfcache round trip 
 npm run verify:idb      # persistence / interrupted-run recovery
 # ...see package.json "verify:*" for the rest
 ```
+
+`scripts/verify-live.mjs` has no shortcut on purpose: it bills a real Google key (see
+`docs/manual-smoke-test.md`).
+
+Known failures: `verify:p8` sometimes times out at its hover-zoom step, so rerun it before treating
+that as a regression. `verify:p12` fails its 375px, 8-cell header check, which needs a six-figure
+spend to show up.
 
 Deploy (only when asked): `byobanana.com` runs the generated Worker, so deploy it with
 `npm run deploy:worker`. Forks use the native `npm run deploy` (Workers Static Assets), which on the

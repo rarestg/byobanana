@@ -382,8 +382,8 @@ async function reducedMotionStage(browser, url, errors) {
   await context.close();
 }
 
-const { child, url } = await startPreview();
 const chromium = loadChromium();
+const { child, url } = await startPreview();
 const browser = await chromium.launch();
 const errors = [];
 try {

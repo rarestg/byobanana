@@ -227,8 +227,8 @@ async function darkMidRoll(browser, url, errors) {
 }
 
 mkdirSync(shotDir, { recursive: true });
-const { child, url } = await startPreview();
 const chromium = loadChromium();
+const { child, url } = await startPreview();
 const browser = await chromium.launch();
 const errors = [];
 try {
